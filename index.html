@@ -6,43 +6,94 @@
     <title>Luogo di Morte · Правила</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
     <style>
-        /* ===== ОБЩИЕ СТИЛИ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #b8aa9a; /* фон под старую бумагу */
+            background: #1a1410; /* глубокий тёмный камень */
             padding: 2rem 1rem;
             font-family: 'Cormorant Garamond', serif;
-            background-image: 
-                linear-gradient(45deg, rgba(200, 180, 160, 0.2) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(200, 180, 160, 0.2) 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, rgba(200, 180, 160, 0.2) 75%),
-                linear-gradient(-45deg, transparent 75%, rgba(200, 180, 160, 0.2) 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* ===== СВИТОК (контейнер) ===== */
+        /* ===== ФОН СВЕЧЕНИЯ ОТ ФАКЕЛОВ ===== */
+        .torch-glow-left,
+        .torch-glow-right {
+            position: fixed;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, rgba(255, 150, 50, 0.10) 0%, transparent 70%);
+            animation: glowPulse 3s ease-in-out infinite alternate;
+        }
+        .torch-glow-left { left: -50px; }
+        .torch-glow-right { right: -50px; animation-delay: 1.5s; }
+        @keyframes glowPulse {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* ===== САМИ ФАКЕЛЫ (анимированные) ===== */
+        .torch {
+            position: fixed;
+            top: 30px;
+            z-index: 10;
+            font-size: 3.5rem;
+            filter: drop-shadow(0 0 20px rgba(255, 150, 50, 0.6));
+            animation: torchFlicker 0.15s infinite alternate;
+            user-select: none;
+            pointer-events: none;
+        }
+        .torch-left { left: 20px; transform: rotate(-10deg); }
+        .torch-right { right: 20px; transform: rotate(10deg) scaleX(-1); }
+
+        /* Огонь (дополнительный слой для реализма) */
+        .torch::after {
+            content: '🔥';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%) scale(1.3);
+            filter: blur(2px) brightness(1.4);
+            opacity: 0.6;
+            animation: fireGlow 1s ease-in-out infinite alternate;
+        }
+        @keyframes torchFlicker {
+            0% { transform: rotate(-12deg) scale(1); }
+            100% { transform: rotate(-8deg) scale(1.02); }
+        }
+        .torch-right {
+            animation-name: torchFlickerRight;
+        }
+        @keyframes torchFlickerRight {
+            0% { transform: rotate(12deg) scale(1); }
+            100% { transform: rotate(8deg) scale(1.02); }
+        }
+        @keyframes fireGlow {
+            0% { opacity: 0.4; filter: blur(2px) brightness(1.2); }
+            100% { opacity: 0.8; filter: blur(4px) brightness(1.8); }
+        }
+
+        /* ===== ОСНОВНОЙ СВИТОК ===== */
         .scroll {
             max-width: 900px;
             width: 100%;
-            background: #f4ede4; /* цвет старой бумаги */
-            padding: 3rem 2.5rem;
+            background: #f4ede4;
+            padding: 3rem 2.5rem 2rem;
             border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 2px #d6c8b8 inset, 0 0 0 4px #e8ddd0 inset;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px #5a4a3a inset, 0 0 0 4px #8a7a6a inset;
             position: relative;
+            z-index: 5;
             transition: 0.3s;
         }
 
-        /* Декоративная рамка (как старый манускрипт) */
+        /* Винтажная рамка */
         .scroll::before {
             content: '';
             position: absolute;
@@ -60,11 +111,11 @@
             text-align: center;
             font-family: 'Cinzel', serif;
             font-weight: 700;
-            font-size: 2.8rem;
-            color: #4a3520;
+            font-size: 3rem;
+            color: #3d2a1a;
             letter-spacing: 4px;
             text-shadow: 1px 1px 0 #d6c8b8;
-            border-bottom: 2px solid #cbb8a6;
+            border-bottom: 2px solid #b8a898;
             padding-bottom: 0.8rem;
             margin-bottom: 2rem;
             position: relative;
@@ -72,20 +123,20 @@
         .title::after {
             content: '✦';
             position: absolute;
-            bottom: -12px;
+            bottom: -14px;
             left: 50%;
             transform: translateX(-50%);
             background: #f4ede4;
-            padding: 0 10px;
+            padding: 0 12px;
             color: #8a7a6a;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
         }
         .subtitle {
             text-align: center;
             font-family: 'Cinzel', serif;
             font-weight: 400;
             font-size: 1.2rem;
-            color: #6a5a4a;
+            color: #5a4a3a;
             letter-spacing: 6px;
             margin-bottom: 2rem;
             text-transform: uppercase;
@@ -157,7 +208,6 @@
             left: 0;
             color: #8a7a6a;
         }
-
         .rule-block .highlight {
             background: rgba(200, 180, 160, 0.3);
             padding: 0.1rem 0.4rem;
@@ -180,7 +230,7 @@
             font-weight: 700;
             font-size: 1.8rem;
             color: #4a3520;
-            border: 2px double #cbb8a6;
+            border: 2px double #b8a898;
             padding: 0.8rem 1.5rem;
             margin: 2rem 0;
             display: inline-block;
@@ -188,6 +238,7 @@
             box-sizing: border-box;
             letter-spacing: 4px;
             background: rgba(220, 200, 180, 0.2);
+            box-shadow: 0 0 30px rgba(180, 120, 60, 0.1);
         }
         .codeword small {
             font-family: 'Cormorant Garamond', serif;
@@ -199,37 +250,46 @@
             margin-top: 0.3rem;
         }
 
-        /* ===== ФУТЕР ===== */
+        /* ===== ФУТЕР (убрал "правила утверждены") ===== */
         .footer {
             text-align: center;
             margin-top: 2rem;
             padding-top: 1rem;
             border-top: 1px solid #cbb8a6;
             font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            color: #6a5a4a;
-            letter-spacing: 2px;
+            font-size: 1rem;
+            color: #5a4a3a;
+            letter-spacing: 3px;
         }
         .footer span {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
+            color: #7a6a5a;
         }
 
         /* ===== АДАПТИВ ===== */
         @media (max-width: 640px) {
             .scroll { padding: 1.5rem 1rem; }
-            .title { font-size: 2rem; }
+            .title { font-size: 2.2rem; }
             .subtitle { font-size: 1rem; }
             .section h2 { font-size: 1.3rem; }
             .rule-block h3 { font-size: 1rem; }
             .codeword { font-size: 1.3rem; }
+            .torch { display: none; } /* на телефонах факелы убираем, чтобы не мешали */
         }
     </style>
 </head>
 <body>
 
+    <!-- Факелы (анимированные) -->
+    <div class="torch torch-left">🔥</div>
+    <div class="torch torch-right">🔥</div>
+
+    <!-- Свечение от факелов -->
+    <div class="torch-glow-left"></div>
+    <div class="torch-glow-right"></div>
+
     <div class="scroll">
-        <!-- ЗАГОЛОВОК -->
         <h1 class="title">ПРАВИЛА ФЛУДА</h1>
         <div class="subtitle">— Luogo di Morte —</div>
 
@@ -535,11 +595,11 @@
             </p>
         </div>
 
-        <!-- ФУТЕР -->
+        <!-- ФУТЕР (убрал "правила утверждены") -->
         <div class="footer">
-            <span>Luogo di Morte</span> &nbsp;·&nbsp; правила утверждены
+            <span>Luogo di Morte</span> &nbsp;·&nbsp; <span>соблюдай кодекс</span>
         </div>
     </div>
 
 </body>
-  </html>
+                </html>
