@@ -4,24 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Luogo di Morte — Средневековый манускрипт</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
-    /* ============ БАЗОВЫЕ ПЕРЕМЕННЫЕ ============ */
+    /* ============================================================
+       ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ
+    ============================================================ */
     :root {
-      --parchment-base: #f2ead9;
-      --parchment-light: #fbf6eb;
-      --parchment-dark: #d9cbb0;
+      --parchment-base: #ede3d0;
+      --parchment-light: #faf4e8;
+      --parchment-dark: #d2c3a5;
       --parchment-shadow: #b5a084;
-      --ink: #3a3028;
+      --ink: #2f261c;
       --ink-soft: #5a4a3a;
       --accent: #8b7a61;
       --gold: #c9a567;
-      --stone-dark: #171310;
-      --stone-mid: #2a231e;
-      --stone-light: #3d352d;
-      --glow-candle: rgba(255, 180, 90, 0.18);
-      --glow-warm: rgba(255, 200, 130, 0.25);
-      --shadow-deep: rgba(0, 0, 0, 0.75);
+      --gold-bright: #e5c687;
+      --stone-dark: #181411;
+      --stone-mid: #2c241e;
+      --stone-light: #453b31;
+      --glow-candle: rgba(255, 180, 90, 0.2);
+      --glow-warm: rgba(255, 210, 140, 0.3);
+      --shadow-deep: rgba(0, 0, 0, 0.8);
+      --shadow-soft: rgba(0, 0, 0, 0.5);
+      --font-heading: 'Cinzel', serif;
+      --font-body: 'Cormorant Garamond', serif;
     }
 
     * {
@@ -34,32 +42,35 @@
       min-height: 100vh;
       background-color: var(--stone-dark);
       background-image:
-        /* каменная кладка */
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 30%),
-        radial-gradient(circle at 80% 70%, rgba(0,0,0,0.35) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(255,220,160,0.06) 0%, transparent 50%),
+        radial-gradient(circle at 15% 25%, rgba(255,255,255,0.04) 0%, transparent 35%),
+        radial-gradient(circle at 85% 70%, rgba(0,0,0,0.45) 0%, transparent 45%),
+        radial-gradient(circle at 55% 50%, rgba(255,210,140,0.08) 0%, transparent 55%),
         repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 5px),
         repeating-linear-gradient(-45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 2px, transparent 2px, transparent 5px);
-      font-family: 'Cormorant Garamond', serif;
+      font-family: var(--font-body);
       color: var(--ink);
       line-height: 1.7;
       display: flex;
       justify-content: center;
-      padding: 3rem 1rem;
+      align-items: flex-start;
+      padding: 4rem 1.5rem;
       position: relative;
       overflow-x: hidden;
-      perspective: 1200px;
+      perspective: 1400px;
     }
 
-    /* мягкое тёплое свечение по центру */
+    /* тёплое свечение сверху (имитация свечей) */
     body::before {
       content: "";
       position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, rgba(255,180,90,0.12) 0%, transparent 65%);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 35%, rgba(255,180,90,0.15) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
-      animation: ambientGlow 8s ease-in-out infinite alternate;
+      animation: ambientGlow 7s ease-in-out infinite alternate;
     }
 
     @keyframes ambientGlow {
@@ -67,36 +78,74 @@
       100% { opacity: 1; }
     }
 
-    /* ============ СВЕЧИ (ТОЛЬКО СВЕТ, БЕЗ ОГНЯ) ============ */
+    /* ============================================================
+       СВЕЧИ И ИХ СВЕТ (ТОЛЬКО CSS, БЕЗ ОГНЯ)
+    ============================================================ */
     .candle-glow {
       position: fixed;
-      width: 180px;
-      height: 180px;
+      width: 220px;
+      height: 220px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,170,70,0.25) 0%, transparent 70%);
-      filter: blur(20px);
+      background: radial-gradient(circle, rgba(255,170,70,0.28) 0%, transparent 70%);
+      filter: blur(24px);
       pointer-events: none;
-      z-index: 0;
-      animation: candlePulse 4s ease-in-out infinite alternate;
+      z-index: 1;
+      animation: candlePulse 4.5s ease-in-out infinite alternate;
     }
-    .candle-glow.left { left: -40px; top: 15%; }
-    .candle-glow.right { right: -40px; top: 12%; }
+    .candle-glow.left {
+      left: -60px;
+      top: 12%;
+    }
+    .candle-glow.right {
+      right: -60px;
+      top: 10%;
+    }
 
     @keyframes candlePulse {
       0% { opacity: 0.6; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* ============ ПЫЛИНКИ (JS) ============ */
+    /* лёгкий дымок от свечей */
+    .smoke {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: rgba(220, 210, 190, 0.15);
+      border-radius: 50%;
+      filter: blur(6px);
+      pointer-events: none;
+      z-index: 2;
+      animation: smokeRise 8s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes smokeRise {
+      0% {
+        transform: translate(0, 0) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translate(var(--smoke-x, 20px), -180px) scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    /* ============================================================
+       ПЫЛИНКИ В ВОЗДУХЕ (JS)
+    ============================================================ */
     .dust {
       position: fixed;
-      width: 2px;
-      height: 2px;
+      width: 3px;
+      height: 3px;
       background: rgba(255, 240, 210, 0.9);
       border-radius: 50%;
-      box-shadow: 0 0 6px rgba(255,200,100,0.8);
+      box-shadow: 0 0 8px rgba(255,200,100,0.8);
       pointer-events: none;
-      z-index: 3;
+      z-index: 10; /* поверх пергамента */
       animation: floatDust linear infinite;
       opacity: 0;
     }
@@ -105,66 +154,120 @@
       0% { transform: translate(0, 0) scale(1); opacity: 0; }
       10% { opacity: 0.9; }
       90% { opacity: 0.5; }
-      100% { transform: translate(var(--drift-x, 0px), -120px) scale(0.4); opacity: 0; }
+      100% { transform: translate(var(--drift-x, 0px), -140px) scale(0.3); opacity: 0; }
     }
 
-    /* ============ ОСНОВНОЙ ЛИСТ ПЕРГАМЕНТА ============ */
+    /* ============================================================
+       ОСНОВНОЙ ЛИСТ ПЕРГАМЕНТА
+    ============================================================ */
     .manuscript {
       position: relative;
       z-index: 5;
-      max-width: 900px;
+      max-width: 920px;
       width: 100%;
       margin-top: 30px;
       background: var(--parchment-base);
-      padding: 4.5rem 4rem;
+      padding: 5rem 4.5rem;
       border: 2px solid var(--accent);
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow:
-        0 25px 50px var(--shadow-deep),
-        0 0 0 12px rgba(140, 120, 90, 0.12),
-        inset 0 0 80px rgba(120, 100, 70, 0.3),
+        0 30px 60px var(--shadow-deep),
+        0 0 0 14px rgba(140, 120, 90, 0.1),
+        inset 0 0 90px rgba(120, 100, 70, 0.35),
         inset 0 0 0 1px rgba(255, 250, 240, 0.4);
-      transform: rotate(-0.5deg);
-      transition: transform 0.6s ease;
-    }
-    .manuscript:hover {
-      transform: rotate(0deg);
+      transform: rotate(-0.8deg);
+      transition: transform 0.7s ease, box-shadow 0.7s ease;
     }
 
-    /* рваный край */
+    .manuscript:hover {
+      transform: rotate(0deg) translateY(-4px);
+      box-shadow:
+        0 40px 70px var(--shadow-deep),
+        0 0 0 16px rgba(140, 120, 90, 0.12),
+        inset 0 0 100px rgba(120, 100, 70, 0.4),
+        inset 0 0 0 1px rgba(255, 250, 240, 0.5);
+    }
+
+    /* Реалистичная текстура пергамента через SVG-шум и градиенты */
+    .manuscript::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background-image:
+        /* шум (feTurbulence) */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E"),
+        /* пятна влаги и возраста */
+        radial-gradient(circle at 8% 12%, rgba(110,90,60,0.18) 0%, transparent 22%),
+        radial-gradient(circle at 92% 18%, rgba(110,90,60,0.15) 0%, transparent 28%),
+        radial-gradient(circle at 68% 82%, rgba(110,90,60,0.2) 0%, transparent 32%),
+        radial-gradient(circle at 28% 78%, rgba(110,90,60,0.12) 0%, transparent 25%),
+        radial-gradient(circle at 45% 40%, rgba(130,110,80,0.07) 0%, transparent 38%),
+        /* тонкие волокна */
+        repeating-linear-gradient(0deg, rgba(160,140,110,0.06) 0px, rgba(160,140,110,0.06) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(90deg, rgba(160,140,110,0.05) 0px, rgba(160,140,110,0.05) 1px, transparent 1px, transparent 4px),
+        /* царапины */
+        repeating-linear-gradient(45deg, transparent 0px, transparent 12px, rgba(100,80,60,0.04) 12px, rgba(100,80,60,0.04) 13px),
+        repeating-linear-gradient(-45deg, transparent 0px, transparent 17px, rgba(100,80,60,0.03) 17px, rgba(100,80,60,0.03) 18px);
+      background-blend-mode: overlay, normal, normal, normal, normal, normal, normal, normal, normal;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* рваные края через clip-path на внешнем контейнере */
     .manuscript::after {
       content: "";
       position: absolute;
-      inset: -6px;
+      top: -6px;
+      left: -6px;
+      right: -6px;
+      bottom: -6px;
       border: 2px solid rgba(160, 140, 110, 0.35);
-      border-radius: 12px;
+      border-radius: 14px;
       pointer-events: none;
-      z-index: -1;
+      z-index: -2;
       background: transparent;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
       clip-path: polygon(
-        0% 2%, 2% 1%, 4% 2%, 7% 1%, 10% 3%, 14% 0%, 18% 2%, 22% 1%, 26% 3%, 30% 0%,
-        34% 2%, 38% 1%, 42% 3%, 46% 0%, 50% 2%, 54% 1%, 58% 3%, 62% 0%, 66% 2%, 70% 1%,
-        74% 3%, 78% 0%, 82% 2%, 86% 1%, 90% 3%, 94% 0%, 97% 2%, 99% 1%, 100% 2%,
+        0% 2%, 2% 1%, 4% 2.5%, 7% 1%, 10% 3%, 14% 0.5%, 18% 2%, 22% 1%, 26% 3.5%, 30% 0.5%,
+        34% 2%, 38% 1%, 42% 3%, 46% 0%, 50% 2.5%, 54% 1%, 58% 3%, 62% 0.5%, 66% 2%, 70% 1%,
+        74% 3.5%, 78% 0.5%, 82% 2%, 86% 1%, 90% 3%, 94% 0%, 97% 2%, 99% 1%, 100% 2.5%,
+        100% 98%, 99% 99%, 97% 98%, 94% 99%, 90% 97%, 86% 100%, 82% 98%, 78% 99%, 74% 97%,
+        70% 100%, 66% 98%, 62% 99%, 58% 97%, 54% 100%, 50% 98%, 46% 99%, 42% 97%, 38% 100%,
+        34% 98%, 30% 99%, 26% 97%, 22% 100%, 18% 98%, 14% 99%, 10% 97%, 7% 100%, 4% 98%, 2% 99%, 0% 98%
+      );
+      -webkit-clip-path: polygon(
+        0% 2%, 2% 1%, 4% 2.5%, 7% 1%, 10% 3%, 14% 0.5%, 18% 2%, 22% 1%, 26% 3.5%, 30% 0.5%,
+        34% 2%, 38% 1%, 42% 3%, 46% 0%, 50% 2.5%, 54% 1%, 58% 3%, 62% 0.5%, 66% 2%, 70% 1%,
+        74% 3.5%, 78% 0.5%, 82% 2%, 86% 1%, 90% 3%, 94% 0%, 97% 2%, 99% 1%, 100% 2.5%,
         100% 98%, 99% 99%, 97% 98%, 94% 99%, 90% 97%, 86% 100%, 82% 98%, 78% 99%, 74% 97%,
         70% 100%, 66% 98%, 62% 99%, 58% 97%, 54% 100%, 50% 98%, 46% 99%, 42% 97%, 38% 100%,
         34% 98%, 30% 99%, 26% 97%, 22% 100%, 18% 98%, 14% 99%, 10% 97%, 7% 100%, 4% 98%, 2% 99%, 0% 98%
       );
     }
 
-    /* внутренняя орнаментальная рамка */
+    /* ============================================================
+       ОРНАМЕНТАЛЬНАЯ РАМКА И УГЛЫ
+    ============================================================ */
     .ornament {
       position: absolute;
-      inset: 18px;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
       border: 1px solid rgba(180, 160, 130, 0.5);
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
     }
     .ornament::before,
     .ornament::after {
       content: "❦";
       position: absolute;
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       color: var(--gold);
       opacity: 0.55;
       top: 50%;
@@ -173,19 +276,18 @@
     .ornament::before { left: -25px; }
     .ornament::after { right: -25px; }
 
-    /* угловые элементы */
     .corner {
       position: absolute;
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border: 3px solid var(--gold);
-      opacity: 0.7;
-      z-index: 1;
+      opacity: 0.75;
+      z-index: 2;
     }
-    .corner.tl { top: 14px; left: 14px; border-right: none; border-bottom: none; border-radius: 6px 0 0 0; }
-    .corner.tr { top: 14px; right: 14px; border-left: none; border-bottom: none; border-radius: 0 6px 0 0; }
-    .corner.bl { bottom: 14px; left: 14px; border-right: none; border-top: none; border-radius: 0 0 0 6px; }
-    .corner.br { bottom: 14px; right: 14px; border-left: none; border-top: none; border-radius: 0 0 6px 0; }
+    .corner.tl { top: 12px; left: 12px; border-right: none; border-bottom: none; border-radius: 8px 0 0 0; }
+    .corner.tr { top: 12px; right: 12px; border-left: none; border-bottom: none; border-radius: 0 8px 0 0; }
+    .corner.bl { bottom: 12px; left: 12px; border-right: none; border-top: none; border-radius: 0 0 0 8px; }
+    .corner.br { bottom: 12px; right: 12px; border-left: none; border-top: none; border-radius: 0 0 8px 0; }
 
     /* чернильные кляксы */
     .ink-blot {
@@ -201,109 +303,111 @@
     .ink-blot.small { width: 10px; height: 10px; }
     .ink-blot.medium { width: 14px; height: 14px; }
 
-    /* ============ ТИПОГРАФИКА ============ */
+    /* ============================================================
+       ТИПОГРАФИКА
+    ============================================================ */
     h1 {
-      font-family: 'Cinzel', serif;
+      font-family: var(--font-heading);
       font-weight: 900;
-      font-size: 3rem;
-      text-align: center;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-      padding-bottom: 0.75em;
-      margin-bottom: 1.5em;
-      border-bottom: 2px solid var(--accent);
-      position: relative;
-      z-index: 2;
-    }
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background: var(--gold);
-      border-radius: 2px;
-    }
-
-    .chapter-title {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: 2.2rem;
+      font-size: 3.2rem;
       text-align: center;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--ink);
-      margin: 3rem 0 2rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+      padding-bottom: 0.75em;
+      margin-bottom: 1.5em;
+      border-bottom: 2px solid var(--accent);
       position: relative;
-      z-index: 2;
+      z-index: 3;
+    }
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 5px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 3px;
+    }
+
+    .chapter-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 2.3rem;
+      text-align: center;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin: 3.5rem 0 2rem;
+      position: relative;
+      z-index: 3;
     }
     .chapter-title::before,
     .chapter-title::after {
       content: '─── ❦ ───';
       display: block;
       text-align: center;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: var(--gold);
       margin: 0.8rem 0;
       letter-spacing: 0.5em;
     }
 
     .part-title {
-      font-family: 'Cinzel', serif;
+      font-family: var(--font-heading);
       font-weight: 700;
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       text-align: center;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--ink-soft);
       margin: 2.5rem 0 1.5rem;
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
 
     .rule-title {
-      font-family: 'Cinzel', serif;
+      font-family: var(--font-heading);
       font-weight: 700;
       font-size: 1.5rem;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--ink);
       border-left: 5px solid var(--accent);
-      padding-left: 1rem;
-      margin: 2rem 0 1rem;
+      padding-left: 1.2rem;
+      margin: 2.5rem 0 1rem;
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
 
     p {
-      margin-bottom: 0.8rem;
-      font-size: 1.2rem;
+      margin-bottom: 0.9rem;
+      font-size: 1.22rem;
       text-align: justify;
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
 
     ul {
-      margin: 0.5rem 0 1rem 2rem;
+      margin: 0.5rem 0 1.2rem 2.2rem;
       list-style: none;
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
     ul li {
       position: relative;
-      margin-bottom: 0.5rem;
-      padding-left: 1.5rem;
-      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      padding-left: 1.6rem;
+      font-size: 1.12rem;
     }
     ul li::before {
       content: '◆';
       position: absolute;
       left: 0;
-      top: 0.1em;
+      top: 0.15em;
       color: var(--accent);
       font-size: 0.9em;
     }
@@ -311,87 +415,99 @@
     .important-box {
       background: rgba(120, 100, 70, 0.15);
       border: 2px solid var(--accent);
-      padding: 2rem;
+      padding: 2.2rem;
       text-align: center;
-      font-family: 'Cinzel', serif;
+      font-family: var(--font-heading);
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--ink);
       margin: 2.5rem 0;
-      box-shadow: inset 0 0 30px rgba(120, 100, 70, 0.25);
+      box-shadow: inset 0 0 35px rgba(120, 100, 70, 0.3);
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
     .important-box p {
       margin: 0.5rem 0;
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       text-align: center;
     }
     .important-box::before,
     .important-box::after {
       content: '❧';
       position: absolute;
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: var(--gold);
       top: 50%;
       transform: translateY(-50%);
       opacity: 0.8;
     }
-    .important-box::before { left: 20px; }
-    .important-box::after { right: 20px; }
+    .important-box::before { left: 25px; }
+    .important-box::after { right: 25px; }
 
     /* буквица */
     .drop-cap::first-letter {
-      font-family: 'Cinzel', serif;
-      font-size: 4.5rem;
+      font-family: var(--font-heading);
+      font-size: 4.8rem;
       float: left;
       line-height: 0.8;
-      padding-right: 10px;
+      padding-right: 12px;
       color: var(--accent);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      text-shadow: 2px 2px 3px rgba(0,0,0,0.2);
     }
 
-    /* ============ АДАПТИВНОСТЬ ============ */
-    @media (max-width: 700px) {
+    /* ============================================================
+       АДАПТИВНОСТЬ
+    ============================================================ */
+    @media (max-width: 768px) {
+      body {
+        padding: 2rem 0.8rem;
+      }
       .manuscript {
         padding: 2.5rem 1.5rem;
-        margin-top: 10px;
+        margin-top: 20px;
         transform: none;
       }
-      h1 { font-size: 2.2rem; }
-      .chapter-title { font-size: 1.8rem; }
-      .candle-glow.left { left: -20px; }
-      .candle-glow.right { right: -20px; }
+      h1 {
+        font-size: 2.2rem;
+      }
+      .chapter-title {
+        font-size: 1.8rem;
+      }
+      .candle-glow.left { left: -30px; }
+      .candle-glow.right { right: -30px; }
     }
   </style>
 </head>
 <body>
-  <!-- Тёплые свечения от свечей (без огня) -->
+  <!-- Свечения от свечей -->
   <div class="candle-glow left"></div>
   <div class="candle-glow right"></div>
 
+  <!-- Дымки (будут создаваться скриптом) -->
+
   <!-- Основной лист -->
   <div class="manuscript">
-    <!-- Декоративная рамка и углы -->
+    <!-- Орнаментальная рамка и углы -->
     <div class="ornament"></div>
     <div class="corner tl"></div>
     <div class="corner tr"></div>
     <div class="corner bl"></div>
     <div class="corner br"></div>
 
-    <!-- Кляксы -->
-    <div class="ink-blot" style="top: 15%; left: 5%;"></div>
-    <div class="ink-blot medium" style="bottom: 20%; right: 8%;"></div>
-    <div class="ink-blot small" style="top: 45%; right: 12%;"></div>
-    <div class="ink-blot small" style="top: 30%; left: 10%;"></div>
+    <!-- Чернильные кляксы -->
+    <div class="ink-blot" style="top: 12%; left: 4%;"></div>
+    <div class="ink-blot medium" style="bottom: 15%; right: 7%;"></div>
+    <div class="ink-blot small" style="top: 42%; right: 10%;"></div>
+    <div class="ink-blot small" style="top: 28%; left: 9%;"></div>
+    <div class="ink-blot" style="bottom: 30%; left: 6%;"></div>
 
     <header>
       <h1>Luogo di Morte</h1>
     </header>
 
     <main>
-      <!-- ====== ПРАВИЛА ====== -->
+      <!-- ====== ПРАВИЛА ФЛУДА ====== -->
       <section class="rule">
         <h2 class="rule-title">ПОЛИТИКА</h2>
         <p class="drop-cap">Обсуждение политических тем, идеологий, государственных режимов и актуальных политических деятелей строго запрещено. Подобные дискуссии провоцируют разногласия и перерастают в конфликты. Нарушение карается временным ограничением на отправку сообщений (МУТ).</p>
@@ -524,7 +640,7 @@
 
       <section class="rule">
         <h2 class="rule-title">НЕДОВЫПОЛНЕНИЕ НОРМЫ</h2>
-        <p>Если по итогам недели участнику до выполнения нормы НЕ ХВАТИЛО 10 сообщений или МЕНЕЕ – выносится ОБЫЧНОЕ ПРЕДУПРЕЖДЕНИЕ (ВАРН).</p>
+        <p>Если по итогам недели участнику до выполнения нормы НЕ ХВАТАЛО 10 сообщений или МЕНЕЕ – выносится ОБЫЧНОЕ ПРЕДУПРЕЖДЕНИЕ (ВАРН).</p>
         <p>Если отставание превышает 10 сообщений – наказание ужесточается.</p>
       </section>
 
@@ -606,7 +722,8 @@
         <p>ОКОНЧАТЕЛЬНОЕ РЕШЕНИЕ – ЗА ВЛАДЕЛЬЦЕМ</p>
       </div>
 
-      <div class="part-title">ОБЩИЕ ПОЛОЖЕНИЯ</div>
+      <!-- Второй "ОБЩИЕ ПОЛОЖЕНИЯ" заменён на "ВЕТКИ" -->
+      <div class="part-title">ВЕТКИ</div>
 
       <p>Ветка — отдельная сюжетная линия, в рамках которой взаимодействуют персонажи.</p>
 
@@ -675,34 +792,71 @@
   </div>
 
   <script>
-    // ===== ПЫЛИНКИ =====
+    // ============================================================
+    // ПЫЛИНКИ
+    // ============================================================
     function createDust() {
       const dust = document.createElement('div');
       dust.classList.add('dust');
       
-      // случайная позиция по всему экрану
+      // случайная позиция по экрану
       const x = Math.random() * 100;
       const y = Math.random() * 100;
       dust.style.left = `${x}vw`;
       dust.style.top = `${y}vh`;
       
       // случайный горизонтальный дрейф
-      dust.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 90}px`);
+      dust.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 100}px`);
       
-      // случайная длительность и задержка анимации
-      dust.style.animationDuration = `${Math.random() * 8 + 6}s`;
-      dust.style.animationDelay = `${Math.random() * 5}s`;
+      // случайная длительность (6–14с) и задержка (0–5с)
+      const duration = Math.random() * 8 + 6;
+      const delay = Math.random() * 5;
+      dust.style.animationDuration = `${duration}s`;
+      dust.style.animationDelay = `${delay}s`;
       
       document.body.appendChild(dust);
       
-      // удаляем после завершения
-      setTimeout(() => dust.remove(), 15000);
+      // удаляем после полного завершения анимации
+      const totalTime = (duration + delay + 1) * 1000;
+      setTimeout(() => dust.remove(), totalTime);
     }
 
-    // запускаем интервал и стартовое наполнение
+    // ============================================================
+    // ЛЁГКИЙ ДЫМОК ОТ СВЕЧЕЙ
+    // ============================================================
+    function createSmoke() {
+      const smoke = document.createElement('div');
+      smoke.classList.add('smoke');
+      
+      // случайная сторона (левая или правая свеча)
+      const side = Math.random() < 0.5 ? 'left' : 'right';
+      const x = side === 'left' 
+        ? Math.random() * 150 + 20  // около левой свечи
+        : window.innerWidth - Math.random() * 150 - 50; // около правой
+      const y = side === 'left' ? window.innerHeight * 0.2 : window.innerHeight * 0.18;
+      
+      smoke.style.left = `${x}px`;
+      smoke.style.top = `${y}px`;
+      smoke.style.setProperty('--smoke-x', `${(Math.random() - 0.5) * 60}px`);
+      
+      const duration = Math.random() * 6 + 6; // 6–12с
+      smoke.style.animationDuration = `${duration}s`;
+      
+      document.body.appendChild(smoke);
+      
+      setTimeout(() => smoke.remove(), duration * 1000 + 100);
+    }
+
+    // запускаем интервалы
     setInterval(createDust, 350);
+    setInterval(createSmoke, 2500);
+    
+    // стартовое наполнение
     for (let i = 0; i < 20; i++) {
       setTimeout(createDust, i * 250);
+    }
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createSmoke, i * 800);
     }
   </script>
 </body>
