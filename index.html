@@ -1,605 +1,709 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Luogo di Morte · Правила</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luogo di Morte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #1a1410; /* глубокий тёмный камень */
-            padding: 2rem 1rem;
-            font-family: 'Cormorant Garamond', serif;
-            position: relative;
-            overflow-x: hidden;
-        }
+    :root {
+      --parchment-light: #f7f2e7;
+      --parchment-mid: #e8dfcd;
+      --parchment-dark: #cbbfa7;
+      --ink: #3a322a;
+      --ink-light: #6b5d4d;
+      --accent: #7a6e5c;
+      --gold: #b0986a;
+      --glow-color: #ff8c00;
+      --shadow-color: rgba(80, 60, 40, 0.3);
+    }
 
-        /* ===== ФОН СВЕЧЕНИЯ ОТ ФАКЕЛОВ ===== */
-        .torch-glow-left,
-        .torch-glow-right {
-            position: fixed;
-            top: 0;
-            width: 300px;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(ellipse at center, rgba(255, 150, 50, 0.10) 0%, transparent 70%);
-            animation: glowPulse 3s ease-in-out infinite alternate;
-        }
-        .torch-glow-left { left: -50px; }
-        .torch-glow-right { right: -50px; animation-delay: 1.5s; }
-        @keyframes glowPulse {
-            0% { opacity: 0.3; transform: scale(1); }
-            100% { opacity: 0.8; transform: scale(1.1); }
-        }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at center, rgba(248, 244, 234, 0.92) 0%, rgba(214, 205, 181, 0.96) 70%, rgba(175, 163, 138, 1) 100%);
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--ink);
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-        /* ===== САМИ ФАКЕЛЫ (анимированные) ===== */
-        .torch {
-            position: fixed;
-            top: 30px;
-            z-index: 10;
-            font-size: 3.5rem;
-            filter: drop-shadow(0 0 20px rgba(255, 150, 50, 0.6));
-            animation: torchFlicker 0.15s infinite alternate;
-            user-select: none;
-            pointer-events: none;
-        }
-        .torch-left { left: 20px; transform: rotate(-10deg); }
-        .torch-right { right: 20px; transform: rotate(10deg) scaleX(-1); }
+    /* ===== ОЧЕНЬ ДЕТАЛЬНАЯ ТЕКСТУРА СТАРОЙ БУМАГИ ===== */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        /* Мелкие волокна */
+        repeating-linear-gradient(0deg, rgba(80,60,40,0.04) 0px, rgba(80,60,40,0.04) 1px, transparent 1px, transparent 2px),
+        repeating-linear-gradient(90deg, rgba(80,60,40,0.03) 0px, rgba(80,60,40,0.03) 1px, transparent 1px, transparent 3px),
+        /* Пятна влаги и старости */
+        radial-gradient(circle at 15% 20%, rgba(139,119,90,0.25) 0%, transparent 25%),
+        radial-gradient(circle at 85% 15%, rgba(139,119,90,0.18) 0%, transparent 30%),
+        radial-gradient(circle at 70% 80%, rgba(100,80,60,0.2) 0%, transparent 35%),
+        radial-gradient(circle at 30% 90%, rgba(120,100,70,0.22) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(160,140,110,0.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        /* Огонь (дополнительный слой для реализма) */
-        .torch::after {
-            content: '🔥';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%) scale(1.3);
-            filter: blur(2px) brightness(1.4);
-            opacity: 0.6;
-            animation: fireGlow 1s ease-in-out infinite alternate;
-        }
-        @keyframes torchFlicker {
-            0% { transform: rotate(-12deg) scale(1); }
-            100% { transform: rotate(-8deg) scale(1.02); }
-        }
-        .torch-right {
-            animation-name: torchFlickerRight;
-        }
-        @keyframes torchFlickerRight {
-            0% { transform: rotate(12deg) scale(1); }
-            100% { transform: rotate(8deg) scale(1.02); }
-        }
-        @keyframes fireGlow {
-            0% { opacity: 0.4; filter: blur(2px) brightness(1.2); }
-            100% { opacity: 0.8; filter: blur(4px) brightness(1.8); }
-        }
+    /* Виньетка и лёгкое затемнение краёв */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(70, 50, 30, 0.35) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
 
-        /* ===== ОСНОВНОЙ СВИТОК ===== */
-        .scroll {
-            max-width: 900px;
-            width: 100%;
-            background: #f4ede4;
-            padding: 3rem 2.5rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px #5a4a3a inset, 0 0 0 4px #8a7a6a inset;
-            position: relative;
-            z-index: 5;
-            transition: 0.3s;
-        }
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      width: 100%;
+      background: rgba(247, 242, 231, 0.88);
+      padding: 3.5rem 3rem;
+      border: 1px solid var(--parchment-dark);
+      box-shadow:
+        0 0 50px var(--shadow-color),
+        inset 0 0 80px rgba(120, 100, 70, 0.25),
+        0 0 0 1px rgba(255, 250, 240, 0.2) inset;
+      border-radius: 8px;
+      backdrop-filter: blur(2px);
+      /* Неровный край – лёгкая кривизна */
+      clip-path: polygon(
+        0% 1.5%, 2% 0.5%, 5% 1%, 10% 0%, 20% 1.5%, 35% 0.5%, 50% 1%, 65% 0%, 80% 1.5%, 90% 0%, 98% 1%, 100% 0.5%,
+        100% 98.5%, 98% 99.5%, 95% 99%, 90% 100%, 80% 98.5%, 65% 99.5%, 50% 99%, 35% 100%, 20% 98.5%, 10% 100%, 5% 99%, 2% 99.5%, 0% 98.5%
+      );
+    }
 
-        /* Винтажная рамка */
-        .scroll::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            right: 12px;
-            bottom: 12px;
-            border: 1px solid #cbb8a6;
-            border-radius: 6px;
-            pointer-events: none;
-        }
+    /* Дополнительные пятна на самой бумаге */
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(100,80,60,0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 20%, rgba(100,80,60,0.12) 0%, transparent 25%),
+        radial-gradient(circle at 70% 85%, rgba(100,80,60,0.18) 0%, transparent 30%),
+        radial-gradient(circle at 25% 75%, rgba(100,80,60,0.1) 0%, transparent 22%);
+      pointer-events: none;
+      z-index: -1;
+    }
 
-        /* ===== ЗАГОЛОВОК ===== */
-        .title {
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 3rem;
-            color: #3d2a1a;
-            letter-spacing: 4px;
-            text-shadow: 1px 1px 0 #d6c8b8;
-            border-bottom: 2px solid #b8a898;
-            padding-bottom: 0.8rem;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        .title::after {
-            content: '✦';
-            position: absolute;
-            bottom: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #f4ede4;
-            padding: 0 12px;
-            color: #8a7a6a;
-            font-size: 1.4rem;
-        }
-        .subtitle {
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-weight: 400;
-            font-size: 1.2rem;
-            color: #5a4a3a;
-            letter-spacing: 6px;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
+    /* ===== ФАКЕЛЫ ===== */
+    .torch {
+      position: fixed;
+      top: 12%;
+      width: 10px;
+      height: 220px;
+      background: linear-gradient(to bottom, #4a3422, #1d1308);
+      border-radius: 5px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+      z-index: 10;
+    }
 
-        /* ===== РАЗДЕЛЫ ===== */
-        .section {
-            margin-bottom: 2.5rem;
-        }
-        .section h2 {
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1.6rem;
-            color: #3d2a1a;
-            border-bottom: 1px dashed #b8a898;
-            padding-bottom: 0.3rem;
-            margin-bottom: 0.8rem;
-            letter-spacing: 2px;
-        }
-        .section h2 .ornament {
-            font-weight: 400;
-            color: #8a7a6a;
-            font-size: 1.2rem;
-            margin: 0 0.5rem;
-        }
+    .torch.left {
+      left: 25px;
+    }
 
-        .rule-block {
-            margin-bottom: 1.2rem;
-            padding-left: 0.5rem;
-            border-left: 3px solid #d6c8b8;
-            padding-left: 1rem;
-        }
-        .rule-block h3 {
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #4a3520;
-            margin-bottom: 0.2rem;
-            letter-spacing: 1px;
-        }
-        .rule-block h3 .badge {
-            font-weight: 400;
-            color: #8a7a6a;
-            font-size: 1rem;
-            margin-right: 0.5rem;
-        }
-        .rule-block p {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            color: #3d322a;
-            margin-bottom: 0.4rem;
-        }
-        .rule-block ul {
-            list-style: none;
-            padding-left: 0.5rem;
-        }
-        .rule-block ul li {
-            padding-left: 1.5rem;
-            position: relative;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #3d322a;
-            margin-bottom: 0.2rem;
-        }
-        .rule-block ul li::before {
-            content: '—';
-            position: absolute;
-            left: 0;
-            color: #8a7a6a;
-        }
-        .rule-block .highlight {
-            background: rgba(200, 180, 160, 0.3);
-            padding: 0.1rem 0.4rem;
-            border-radius: 4px;
-            font-weight: 600;
-            color: #3d2a1a;
-        }
+    .torch.right {
+      right: 25px;
+    }
 
-        .divider {
-            width: 100%;
-            height: 1px;
-            background: repeating-linear-gradient(90deg, #cbb8a6, #cbb8a6 8px, transparent 8px, transparent 16px);
-            margin: 1.5rem 0;
-        }
+    .torch .glow {
+      position: absolute;
+      top: -25px;
+      left: -25px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,160,50,0.85), rgba(255,80,0,0.15) 60%, transparent 70%);
+      filter: blur(6px);
+      animation: flicker 0.18s infinite alternate;
+      pointer-events: none;
+    }
 
-        /* ===== КОДОВОЕ СЛОВО ===== */
-        .codeword {
-            text-align: center;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: #4a3520;
-            border: 2px double #b8a898;
-            padding: 0.8rem 1.5rem;
-            margin: 2rem 0;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
-            letter-spacing: 4px;
-            background: rgba(220, 200, 180, 0.2);
-            box-shadow: 0 0 30px rgba(180, 120, 60, 0.1);
-        }
-        .codeword small {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 400;
-            font-size: 1rem;
-            color: #6a5a4a;
-            letter-spacing: 2px;
-            display: block;
-            margin-top: 0.3rem;
-        }
+    .torch .flame {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      width: 24px;
+      height: 48px;
+      background: radial-gradient(ellipse at 30% 30%, #fff8d0, #ffb640 45%, #e64a00 80%, rgba(0,0,0,0.2) 100%);
+      border-radius: 50% 50% 20% 20% / 60% 60% 30% 30%;
+      box-shadow: 0 0 20px var(--glow-color), 0 0 40px #ff5000;
+      transform-origin: bottom center;
+      transform: translateX(-50%);
+      animation: flameFlicker 0.22s infinite alternate;
+      pointer-events: none;
+    }
 
-        /* ===== ФУТЕР (убрал "правила утверждены") ===== */
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #cbb8a6;
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            color: #5a4a3a;
-            letter-spacing: 3px;
-        }
-        .footer span {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            color: #7a6a5a;
-        }
+    .torch .flame::before,
+    .torch .flame::after {
+      content: '';
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 20% 20% / 60% 60% 30% 30%;
+    }
 
-        /* ===== АДАПТИВ ===== */
-        @media (max-width: 640px) {
-            .scroll { padding: 1.5rem 1rem; }
-            .title { font-size: 2.2rem; }
-            .subtitle { font-size: 1rem; }
-            .section h2 { font-size: 1.3rem; }
-            .rule-block h3 { font-size: 1rem; }
-            .codeword { font-size: 1.3rem; }
-            .torch { display: none; } /* на телефонах факелы убираем, чтобы не мешали */
-        }
-    </style>
+    .torch .flame::before {
+      width: 14px;
+      height: 30px;
+      background: radial-gradient(ellipse at 40% 30%, #fffef0, #ffd580 60%, #ff7a00 90%, transparent);
+      bottom: 4%;
+      animation: innerFlicker 0.28s infinite alternate;
+    }
+
+    .torch .flame::after {
+      width: 8px;
+      height: 20px;
+      background: #fff;
+      bottom: 1%;
+      opacity: 0.9;
+      animation: innerFlicker 0.2s infinite alternate;
+    }
+
+    @keyframes flameFlicker {
+      0% { transform: translateX(-50%) scale(1) rotate(-1deg); }
+      100% { transform: translateX(-50%) scale(1.08) rotate(1deg); }
+    }
+
+    @keyframes innerFlicker {
+      0% { transform: translateX(-50%) scale(0.9) rotate(-2deg); }
+      100% { transform: translateX(-50%) scale(1.05) rotate(2deg); }
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* ===== ЛЕТЯЩИЕ ИСКРЫ ===== */
+    .ember {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffe9a8, #ff8c00);
+      box-shadow: 0 0 8px var(--glow-color);
+      pointer-events: none;
+      z-index: 11;
+      animation: rise linear forwards;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--drift, 0px), -100px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* ===== ТИПОГРАФИКА ===== */
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 3.2rem;
+      text-align: center;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      padding-bottom: 0.5em;
+      margin-bottom: 1em;
+      border-bottom: 2px solid var(--accent);
+      position: relative;
+      text-transform: uppercase;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 3px;
+    }
+
+    .chapter-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      text-align: center;
+      letter-spacing: 0.15em;
+      color: var(--ink);
+      margin: 3rem 0 2rem;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .chapter-title::before,
+    .chapter-title::after {
+      content: '';
+      display: block;
+      width: 40%;
+      height: 1px;
+      background: var(--accent);
+      margin: 1rem auto;
+    }
+
+    .part-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      text-align: center;
+      letter-spacing: 0.2em;
+      color: var(--ink-light);
+      text-transform: uppercase;
+      margin: 2.5rem 0 1.5rem;
+    }
+
+    .rule-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink);
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+      margin: 2rem 0 0.75rem;
+    }
+
+    p {
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      text-align: justify;
+    }
+
+    ul {
+      margin: 0.5rem 0 1rem 1.5rem;
+      list-style: none;
+    }
+
+    ul li {
+      position: relative;
+      margin-bottom: 0.4rem;
+      padding-left: 1.2rem;
+      font-size: 1.05rem;
+    }
+
+    ul li::before {
+      content: '◆';
+      position: absolute;
+      left: 0;
+      top: 0.1em;
+      color: var(--accent);
+      font-size: 0.8em;
+    }
+
+    .important-box {
+      background: rgba(120,100,70,0.15);
+      border: 2px solid var(--accent);
+      padding: 1.8rem;
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--ink);
+      text-transform: uppercase;
+      margin: 2.5rem 0;
+      box-shadow: inset 0 0 25px rgba(120,100,70,0.25);
+      position: relative;
+    }
+
+    .important-box p {
+      margin: 0.4rem 0;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .important-box::before,
+    .important-box::after {
+      content: '❧';
+      position: absolute;
+      font-size: 1.8rem;
+      color: var(--gold);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .important-box::before {
+      left: 15px;
+    }
+
+    .important-box::after {
+      right: 15px;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 1.5rem 1.2rem;
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+      .chapter-title {
+        font-size: 1.6rem;
+      }
+      .torch.left {
+        left: 5px;
+      }
+      .torch.right {
+        right: 5px;
+      }
+      .torch {
+        height: 150px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Факелы -->
+  <div class="torch left">
+    <div class="glow"></div>
+    <div class="flame"></div>
+  </div>
+  <div class="torch right">
+    <div class="glow"></div>
+    <div class="flame"></div>
+  </div>
 
-    <!-- Факелы (анимированные) -->
-    <div class="torch torch-left">🔥</div>
-    <div class="torch torch-right">🔥</div>
+  <div class="container">
+    <header>
+      <h1>Luogo di Morte</h1>
+    </header>
 
-    <!-- Свечение от факелов -->
-    <div class="torch-glow-left"></div>
-    <div class="torch-glow-right"></div>
+    <main>
+      <!-- Ниже весь текст правил, как в исходнике, но без старого оформления -->
+      <section class="rule">
+        <h2 class="rule-title">ПОЛИТИКА</h2>
+        <p>Обсуждение политических тем, идеологий, государственных режимов и актуальных политических деятелей строго запрещено. Подобные дискуссии провоцируют разногласия и перерастают в конфликты. Нарушение карается временным ограничением на отправку сообщений (МУТ).</p>
+      </section>
 
-    <div class="scroll">
-        <h1 class="title">ПРАВИЛА ФЛУДА</h1>
-        <div class="subtitle">— Luogo di Morte —</div>
+      <section class="rule">
+        <h2 class="rule-title">СПАМ</h2>
+        <p>Спамом признается:</p>
+        <ul>
+          <li>отправка однотипных, бессмысленных или повторяющихся сообщений;</li>
+          <li>чрезмерное использование визуального контента (видео, GIF, стикеры, фотографии).</li>
+        </ul>
+        <p>Критический порог – более шести подобных сообщений подряд. Мера наказания (МУТ или БАН) выбирается администрацией.</p>
+      </section>
 
-        <!-- РАЗДЕЛ I -->
-        <div class="section">
-            <h2>◈ ПОЛИТИКА</h2>
-            <div class="rule-block">
-                <p>Обсуждение политических тем, идеологий, государственных режимов и актуальных политических деятелей строго запрещено. Подобные дискуссии провоцируют разногласия и перерастают в конфликты. Нарушение карается временным ограничением на отправку сообщений (МУТ).</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">МАТЕРИАЛЫ 18+</h2>
+        <p>Размещение фото-, видео- и текстовых материалов эротического или порнографического характера ДОПУСКАЕТСЯ при строгом соблюдении двух условий:</p>
+        <ul>
+          <li>обязательное использование цензуры (блюр);</li>
+          <li>предварительное текстовое предупреждение о наличии контента 18+.</li>
+        </ul>
+        <p>Отсутствие блюра или предупреждения влечет удаление контента и ВАРН.</p>
+      </section>
 
-            <h2>◈ СПАМ</h2>
-            <div class="rule-block">
-                <p>Спамом признается:</p>
-                <ul>
-                    <li>отправка однотипных, бессмысленных или повторяющихся сообщений;</li>
-                    <li>чрезмерное использование визуального контента (видео, GIF, стикеры, фотографии).</li>
-                </ul>
-                <p>Критический порог – более шести подобных сообщений подряд. Мера наказания (МУТ или БАН) выбирается администрацией.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">РЕКЛАМА СТОРОННИХ РЕСУРСОВ</h2>
+        <p>Публичное размещение ссылок, приглашений или анонсов сторонних ресурсов ЗАПРЕЩЕНО. Для рекламы предусмотрены отдельные каналы. Первое нарушение – ВАРН. Повторное – БАН.</p>
+      </section>
 
-            <h2>◈ МАТЕРИАЛЫ 18+</h2>
-            <div class="rule-block">
-                <p>Размещение фото-, видео- и текстовых материалов эротического или порнографического характера <strong>ДОПУСКАЕТСЯ</strong> при строгом соблюдении двух условий:</p>
-                <ul>
-                    <li>обязательное использование цензуры (блюр);</li>
-                    <li>предварительное текстовое предупреждение о наличии контента 18+.</li>
-                </ul>
-                <p>Отсутствие блюра или предупреждения влечет удаление контента и ВАРН.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ОСКОРБЛЕНИЯ И ТОКСИЧНОСТЬ</h2>
+        <p>Оскорбления в любой форме категорически недопустимы. Отговорки в духе «это была шутка» НЕ ПРИНИМАЮТСЯ.</p>
+        <ul>
+          <li>Сексизм, расизм, оскорбления по национальному или религиозному признаку – МГНОВЕННЫЙ БАН.</li>
+          <li>Запрещается осуждать участников за предпочтения в пейрингах.</li>
+        </ul>
+        <p>Стандартное наказание – ВАРН. При рецидиве – БАН.</p>
+      </section>
 
-            <h2>◈ РЕКЛАМА СТОРОННИХ РЕСУРСОВ</h2>
-            <div class="rule-block">
-                <p>Публичное размещение ссылок, приглашений или анонсов сторонних ресурсов <strong>ЗАПРЕЩЕНО</strong>. Для рекламы предусмотрены отдельные каналы. Первое нарушение – ВАРН. Повторное – БАН.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">КОНФЛИКТЫ МЕЖДУ УЧАСТНИКАМИ</h2>
+        <p>При возникновении спора рекомендуется:</p>
+        <ul>
+          <li>перенести обсуждение в ЛИЧНЫЕ СООБЩЕНИЯ;</li>
+          <li>либо прекратить спор.</li>
+        </ul>
+        <p>Наказание (ВАРН или БАН) применяется ко ВСЕМ сторонам конфликта.</p>
+      </section>
 
-            <h2>◈ ОСКОРБЛЕНИЯ И ТОКСИЧНОСТЬ</h2>
-            <div class="rule-block">
-                <p>Оскорбления в любой форме категорически недопустимы. Отговорки в духе «это была шутка» <strong>НЕ ПРИНИМАЮТСЯ</strong>.</p>
-                <ul>
-                    <li>Сексизм, расизм, оскорбления по национальному или религиозному признаку – <span class="highlight">МГНОВЕННЫЙ БАН</span>.</li>
-                    <li>Запрещается осуждать участников за предпочтения в пейрингах.</li>
-                </ul>
-                <p>Стандартное наказание – ВАРН. При рецидиве – БАН.</p>
-            </div>
+      <div class="part-title">РАЗДЕЛ II. РОЛЕВАЯ СИСТЕМА</div>
 
-            <h2>◈ КОНФЛИКТЫ МЕЖДУ УЧАСТНИКАМИ</h2>
-            <div class="rule-block">
-                <p>При возникновении спора рекомендуется:</p>
-                <ul>
-                    <li>перенести обсуждение в ЛИЧНЫЕ СООБЩЕНИЯ;</li>
-                    <li>либо прекратить спор.</li>
-                </ul>
-                <p>Наказание (ВАРН или БАН) применяется ко ВСЕМ сторонам конфликта.</p>
-            </div>
-        </div>
+      <section class="rule">
+        <h2 class="rule-title">ВЫБОР РОЛИ</h2>
+        <p>Каждому участнику разрешается взять ТОЛЬКО ОДНУ роль. Исключения не делаются. Смена роли возможна только после официального отказа.</p>
+      </section>
 
-        <div class="divider"></div>
+      <section class="rule">
+        <h2 class="rule-title">ОБЯЗАТЕЛЬНОСТЬ ПОСТОВ</h2>
+        <p>Ролевая игра является ОБЯЗАТЕЛЬНОЙ. Каждый участник обязан вести персонажа и публиковать посты.</p>
+      </section>
 
-        <!-- РАЗДЕЛ II — РОЛЕВАЯ СИСТЕМА -->
-        <div class="section">
-            <h2>⊱ РОЛЕВАЯ СИСТЕМА ⊰</h2>
+      <section class="rule">
+        <h2 class="rule-title">ИНТИМ И НАСИЛИЕ В ПОСТАХ</h2>
+        <p>Описание сцен физического насилия, жестокости, а также постельных сцен РАЗРЕШЕНО при соблюдении условий:</p>
+        <ul>
+          <li>контент скрыт под спойлер;</li>
+          <li>наличие текстового предупреждения в начале поста.</li>
+        </ul>
+        <p>Нарушение – ВАРН. Систематическое – БАН.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ВЫБОР РОЛИ</h3>
-                <p>Каждому участнику разрешается взять <strong>ТОЛЬКО ОДНУ</strong> роль. Исключения не делаются. Смена роли возможна только после официального отказа.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ФЛУД В РОЛЕВОМ ЧАТЕ</h2>
+        <p>Флуд в канале для постов ЗАПРЕЩЕН. Для дополнения поста используйте редактирование с пометкой //. За систематический флуд – ВАРН.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ОБЯЗАТЕЛЬНОСТЬ ПОСТОВ</h3>
-                <p>Ролевая игра является <strong>ОБЯЗАТЕЛЬНОЙ</strong>. Каждый участник обязан вести персонажа и публиковать посты.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">МИНИМАЛЬНЫЙ ОБЪЕМ ПОСТОВ</h2>
+        <p>Минимальный размер поста – от 30 строк в телефонном формате. Чайлд имеет право дать время на доработку. При игнорировании – ВАРН.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ИНТИМ И НАСИЛИЕ В ПОСТАХ</h3>
-                <p>Описание сцен физического насилия, жестокости, а также постельных сцен <strong>РАЗРЕШЕНО</strong> при соблюдении условий:</p>
-                <ul>
-                    <li>контент скрыт под спойлер;</li>
-                    <li>наличие текстового предупреждения в начале поста.</li>
-                </ul>
-                <p>Нарушение – ВАРН. Систематическое – БАН.</p>
-            </div>
+      <div class="part-title">НАКОПЛЕНИЕ НАКАЗАНИЙ</div>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ФЛУД В РОЛЕВОМ ЧАТЕ</h3>
-                <p>Флуд в канале для постов <strong>ЗАПРЕЩЕН</strong>. Для дополнения поста используйте редактирование с пометкой //. За систематический флуд – ВАРН.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">СИСТЕМА ШТРАФОВ</h2>
+        <p>Три (3) предупреждения (ВАРНА) в течение активного периода приравниваются к автоматической БЛОКИРОВКЕ (БАНУ).</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> МИНИМАЛЬНЫЙ ОБЪЕМ ПОСТОВ</h3>
-                <p>Минимальный размер поста – <strong>от 30 строк</strong> в телефонном формате. Чайлд имеет право дать время на доработку. При игнорировании – ВАРН.</p>
-            </div>
-        </div>
+      <div class="important-box">
+        <p>КОДОВОЕ СЛОВО ДЛЯ ПОДТВЕРЖДЕНИЯ – "НОЖ"</p>
+        <p>ПРАВИЛА ВСТУПАЮТ В СИЛУ НЕМЕДЛЕННО</p>
+      </div>
 
-        <div class="divider"></div>
+      <h2 class="chapter-title">НОРМЫ АКТИВНОСТИ</h2>
 
-        <!-- НАКОПЛЕНИЕ НАКАЗАНИЙ -->
-        <div class="section">
-            <h2>⊱ НАКОПЛЕНИЕ НАКАЗАНИЙ ⊰</h2>
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> СИСТЕМА ШТРАФОВ</h3>
-                <p>Три (3) предупреждения (ВАРНА) в течение активного периода приравниваются к автоматической БЛОКИРОВКЕ (БАНУ).</p>
-            </div>
-        </div>
+      <div class="part-title">РАЗДЕЛ III. НОРМЫ АКТИВНОСТИ</div>
 
-        <div class="divider"></div>
+      <section class="rule">
+        <h2 class="rule-title">НЕДЕЛЬНЫЕ НОРМАТИВЫ</h2>
+        <p>Каждый участник обязан еженедельно выполнять:</p>
+        <ul>
+          <li>ФЛУД-ЧАТ — 100 сообщений за календарную неделю.</li>
+          <li>РОЛЕВОЙ ЧАТ — 1 развернутый пост за календарную неделю.</li>
+        </ul>
+        <p>Отсчет ведется с момента подтверждения участия.</p>
+      </section>
 
-        <!-- КОДОВОЕ СЛОВО -->
-        <div class="codeword">
-            ⚔ КОДОВОЕ СЛОВО – <strong>"НОЖ"</strong>
-            <small>Правила вступают в силу немедленно</small>
-        </div>
+      <section class="rule">
+        <h2 class="rule-title">НЕАКТИВНОСТЬ</h2>
+        <p>Отсутствие активности в течение 3 дней подряд расценивается как нарушение.</p>
+        <p>Исключения:</p>
+        <ul>
+          <li>участник предупредил об отсутствии;</li>
+          <li>участник оформил REST.</li>
+        </ul>
+        <p>При отсутствии предупреждения или реста от 3 дней – ИСКЛЮЧЕНИЕ.</p>
+      </section>
 
-        <!-- РАЗДЕЛ III — НОРМЫ АКТИВНОСТИ -->
-        <div class="section">
-            <h2>⊱ НОРМЫ АКТИВНОСТИ ⊰</h2>
+      <section class="rule">
+        <h2 class="rule-title">ИММУНИТЕТ ДЛЯ НОВЫХ</h2>
+        <p>Каждый новый участник получает льготный период – ПЕРВЫЕ 5 дней.</p>
+        <p>В этот срок:</p>
+        <ul>
+          <li>не проверяется на выполнение нормы;</li>
+          <li>не подлежит чистке за неактивность.</li>
+        </ul>
+        <p>По истечении 5 дней участник переходит в общий режим.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> НЕДЕЛЬНЫЕ НОРМАТИВЫ</h3>
-                <p>Каждый участник обязан еженедельно выполнять:</p>
-                <ul>
-                    <li>ФЛУД-ЧАТ — <strong>100 сообщений</strong> за календарную неделю.</li>
-                    <li>РОЛЕВОЙ ЧАТ — <strong>1 развернутый пост</strong> за календарную неделю.</li>
-                </ul>
-                <p>Отсчет ведется с момента подтверждения участия.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">НЕДОВЫПОЛНЕНИЕ НОРМЫ</h2>
+        <p>Если по итогам недели участнику до выполнения нормы НЕ ХВАТИЛО 10 сообщений или МЕНЕЕ – выносится ОБЫЧНОЕ ПРЕДУПРЕЖДЕНИЕ (ВАРН).</p>
+        <p>Если отставание превышает 10 сообщений – наказание ужесточается.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> НЕАКТИВНОСТЬ</h3>
-                <p>Отсутствие активности в течение 3 дней подряд расценивается как нарушение. Исключения:</p>
-                <ul>
-                    <li>участник предупредил об отсутствии;</li>
-                    <li>участник оформил REST.</li>
-                </ul>
-                <p>При отсутствии предупреждения или реста от 3 дней – <strong>ИСКЛЮЧЕНИЕ</strong>.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">АКТИВАЦИЯ РЕСТА</h2>
+        <p>Участник имеет право взять REST на срок до 14 дней.</p>
+        <p>Оформление через бота или личное обращение к владельцу.</p>
+        <p>Во время реста нормы НЕ применяются, роль сохраняется.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ИММУНИТЕТ ДЛЯ НОВЫХ</h3>
-                <p>Каждый новый участник получает льготный период – <strong>ПЕРВЫЕ 5 дней</strong>. В этот срок:</p>
-                <ul>
-                    <li>не проверяется на выполнение нормы;</li>
-                    <li>не подлежит чистке за неактивность.</li>
-                </ul>
-                <p>По истечении 5 дней участник переходит в общий режим.</p>
-            </div>
+      <div class="important-box">
+        <p>НАРУШЕНИЕ НОРМ ВЛЕЧЕТ ЗА СОБОЙ САНКЦИИ</p>
+      </div>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> НЕДОВЫПОЛНЕНИЕ НОРМЫ</h3>
-                <p>Если по итогам недели участнику до выполнения нормы <strong>НЕ ХВАТИЛО 10 сообщений или МЕНЕЕ</strong> – выносится ОБЫЧНОЕ ПРЕДУПРЕЖДЕНИЕ (ВАРН). Если отставание превышает 10 сообщений – наказание ужесточается.</p>
-            </div>
+      <h2 class="chapter-title">РЕГЛАМЕНТ СОРОЛЬСТВА</h2>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> АКТИВАЦИЯ РЕСТА</h3>
-                <p>Участник имеет право взять REST на срок до 14 дней. Оформление через бота или личное обращение к владельцу. Во время реста нормы НЕ применяются, роль сохраняется.</p>
-            </div>
+      <div class="part-title">ОБЩИЕ ПОЛОЖЕНИЯ</div>
 
-            <div class="rule-block">
-                <p style="font-weight: 600; margin-top: 1rem; color: #4a3520;">⚠ НАРУШЕНИЕ НОРМ ВЛЕЧЕТ ЗА СОБОЙ САНКЦИИ</p>
-            </div>
-        </div>
+      <p>Сорольство — парное взаимодействие между персонажами, основанное на сюжетной связке.</p>
 
-        <div class="divider"></div>
+      <p>Если участник уже в проекте и его роль предполагает конкретную парную связку, он имеет ПРИОРИТЕТНОЕ ПРАВО на взаимодействие с входящим.</p>
+      <ul>
+        <li>Входящий, выбирая роль, соглашается на сорольство с ожидающим.</li>
+        <li>Отказ – основание для ОТКЛОНЕНИЯ ЗАЯВКИ.</li>
+      </ul>
 
-        <!-- РЕГЛАМЕНТ СОРОЛЬСТВА -->
-        <div class="section">
-            <h2>⊱ РЕГЛАМЕНТ СОРОЛЬСТВА ⊰</h2>
+      <section class="rule">
+        <h2 class="rule-title">ОТВЕТСТВЕННОСТЬ ВХОДЯЩЕГО</h2>
+        <p>Входящий участник обязуется:</p>
+        <ul>
+          <li>взаимодействовать с ожидающим в рамках сюжета;</li>
+          <li>поддерживать регулярность совместных постов;</li>
+          <li>не игнорировать сорола.</li>
+        </ul>
+        <p>Игнорирование – нарушение условий участия.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ОБЩИЕ ПОЛОЖЕНИЯ</h3>
-                <p>Сорольство — парное взаимодействие между персонажами, основанное на сюжетной связке.</p>
-                <p>Если участник уже в проекте и его роль предполагает конкретную парную связку, он имеет <strong>ПРИОРИТЕТНОЕ ПРАВО</strong> на взаимодействие с входящим.</p>
-                <ul>
-                    <li>Входящий, выбирая роль, соглашается на сорольство с ожидающим.</li>
-                    <li>Отказ – основание для <strong>ОТКЛОНЕНИЯ ЗАЯВКИ</strong>.</li>
-                </ul>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ОТКАЗ СО СТОРОНЫ ОЖИДАЮЩЕГО</h2>
+        <p>Ожидающий имеет право отказаться ТОЛЬКО по объективным причинам:</p>
+        <ul>
+          <li>несоответствие персонажа ожиданиям;</li>
+          <li>нарушения правил со стороны входящего;</li>
+          <li>личная договоренность.</li>
+        </ul>
+        <p>В таком случае входящий ОБЯЗАН СМЕНИТЬ РОЛЬ, так как ожидающий был в проекте ПЕРВЫМ.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ОТВЕТСТВЕННОСТЬ ВХОДЯЩЕГО</h3>
-                <p>Входящий участник обязуется:</p>
-                <ul>
-                    <li>взаимодействовать с ожидающим в рамках сюжета;</li>
-                    <li>поддерживать регулярность совместных постов;</li>
-                    <li>не игнорировать сорола.</li>
-                </ul>
-                <p>Игнорирование – нарушение условий участия.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">НЕОБОСНОВАННЫЙ ОТКАЗ</h2>
+        <p>Если ожидающий отказывается без уважительной причины («просто не хочу»):</p>
+        <ul>
+          <li>проблема переходит к ожидающему;</li>
+          <li>входящий НЕ обязан менять роль;</li>
+          <li>администрация не имеет права принудительно менять роль участника.</li>
+        </ul>
+        <p>При повторных случаях – санкции к ожидающему.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ОТКАЗ СО СТОРОНЫ ОЖИДАЮЩЕГО</h3>
-                <p>Ожидающий имеет право отказаться <strong>ТОЛЬКО</strong> по объективным причинам:</p>
-                <ul>
-                    <li>несоответствие персонажа ожиданиям;</li>
-                    <li>нарушения правил со стороны входящего;</li>
-                    <li>личная договоренность.</li>
-                </ul>
-                <p>В таком случае входящий <strong>ОБЯЗАН СМЕНИТЬ РОЛЬ</strong>, так как ожидающий был в проекте ПЕРВЫМ.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ПОРЯДОК ДЕЙСТВИЙ</h2>
+        <p>Шаг 1. Участник обращается к администрации.</p>
+        <p>Шаг 2. Администрация запрашивает объяснение.</p>
+        <p>Шаг 3. Принимается решение.</p>
+        <p>Шаг 4. Решение доводится до обеих сторон.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> НЕОБОСНОВАННЫЙ ОТКАЗ</h3>
-                <p>Если ожидающий отказывается без уважительной причины («просто не хочу»):</p>
-                <ul>
-                    <li>проблема переходит к ожидающему;</li>
-                    <li>входящий НЕ обязан менять роль;</li>
-                    <li>администрация не имеет права принудительно менять роль участника.</li>
-                </ul>
-                <p>При повторных случаях – санкции к ожидающему.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">КЛЮЧЕВОЙ ПРИНЦИП</h2>
+        <ul>
+          <li>Приоритет защиты – у старожила.</li>
+          <li>Приоритет справедливости – у того, чей отказ обоснован.</li>
+          <li>Недопустимо принуждение к сорольству без веских оснований.</li>
+        </ul>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ПОРЯДОК ДЕЙСТВИЙ</h3>
-                <p><strong>Шаг 1.</strong> Участник обращается к администрации.<br>
-                <strong>Шаг 2.</strong> Администрация запрашивает объяснение.<br>
-                <strong>Шаг 3.</strong> Принимается решение.<br>
-                <strong>Шаг 4.</strong> Решение доводится до обеих сторон.</p>
-            </div>
+      <div class="important-box">
+        <p>РЕШЕНИЕ СПОРНЫХ ВОПРОСОВ – ЗА АДМИНИСТРАЦИЕЙ</p>
+        <p>ОКОНЧАТЕЛЬНОЕ РЕШЕНИЕ – ЗА ВЛАДЕЛЬЦЕМ</p>
+      </div>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> КЛЮЧЕВОЙ ПРИНЦИП</h3>
-                <ul>
-                    <li>Приоритет защиты – у старожила.</li>
-                    <li>Приоритет справедливости – у того, чей отказ обоснован.</li>
-                    <li>Недопустимо принуждение к сорольству без веских оснований.</li>
-                </ul>
-            </div>
-        </div>
+      <div class="part-title">ОБЩИЕ ПОЛОЖЕНИЯ</div>
 
-        <div class="divider"></div>
+      <p>Ветка — отдельная сюжетная линия, в рамках которой взаимодействуют персонажи.</p>
 
-        <!-- ВЕТКИ -->
-        <div class="section">
-            <h2>⊱ ВЕТКИ ⊰</h2>
+      <section class="rule">
+        <h2 class="rule-title">МАКСИМАЛЬНОЕ КОЛИЧЕСТВО</h2>
+        <p>Одновременно доступно ДВЕ активные ветки на одного участника.</p>
+        <ul>
+          <li>Одна ветка = взаимодействие в рамках одного диалога.</li>
+          <li>Стандартный состав – до 3 участников.</li>
+        </ul>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ОБЩИЕ ПОЛОЖЕНИЯ</h3>
-                <p>Ветка — отдельная сюжетная линия, в рамках которой взаимодействуют персонажи.</p>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">НОРМА ПОСТОВ</h2>
+        <ul>
+          <li>2 ветки – 2 поста в неделю (по одному в каждой).</li>
+        </ul>
+        <p>При двух ветках – пост в КАЖДОЙ из них, либо один развернутый, охватывающий обе.</p>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> МАКСИМАЛЬНОЕ КОЛИЧЕСТВО</h3>
-                <p>Одновременно доступно <strong>ДВЕ</strong> активные ветки на одного участника.</p>
-                <ul>
-                    <li>Одна ветка = взаимодействие в рамках одного диалога.</li>
-                    <li>Стандартный состав – до 3 участников.</li>
-                </ul>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ЦЕЛЬ ВЕТОК</h2>
+        <ul>
+          <li>Возможность ролить с разными участниками без смешивания сюжетных линий.</li>
+          <li>Сохранение приоритетных связок – если вашу основную роль ждет сорол, вы можете параллельно общаться с другим участником.</li>
+        </ul>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> НОРМА ПОСТОВ</h3>
-                <ul>
-                    <li>2 ветки – 2 поста в неделю (по одному в каждой).</li>
-                    <li>При двух ветках – пост в КАЖДОЙ из них, либо один развернутый, охватывающий обе.</li>
-                </ul>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ПРИОРИТЕТ ОСНОВНОЙ ВЕТКИ</h2>
+        <p>Если роль имеет закрепленную сорольную связку:</p>
+        <ul>
+          <li>ветка с этим соролом – ОСНОВНАЯ;</li>
+          <li>вторая – ДОПОЛНИТЕЛЬНАЯ;</li>
+          <li>основная ветка имеет приоритет по времени и качеству.</li>
+        </ul>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ЦЕЛЬ ВЕТОК</h3>
-                <ul>
-                    <li>Возможность ролить с разными участниками без смешивания сюжетных линий.</li>
-                    <li>Сохранение приоритетных связок – если вашу основную роль ждет сорол, вы можете параллельно общаться с другим участником.</li>
-                </ul>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ОТКРЫТИЕ И ЗАКРЫТИЕ</h2>
+        <ul>
+          <li>Ветка открывается по согласию участников.</li>
+          <li>Закрывается: по завершении линии, по согласию, по решению администрации.</li>
+          <li>После закрытия норма пересчитывается.</li>
+        </ul>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ПРИОРИТЕТ ОСНОВНОЙ ВЕТКИ</h3>
-                <p>Если роль имеет закрепленную сорольную связку:</p>
-                <ul>
-                    <li>ветка с этим соролом – ОСНОВНАЯ;</li>
-                    <li>вторая – ДОПОЛНИТЕЛЬНАЯ;</li>
-                    <li>основная ветка имеет приоритет по времени и качеству.</li>
-                </ul>
-            </div>
+      <section class="rule">
+        <h2 class="rule-title">ЗАВИСШИЕ ВЕТКИ</h2>
+        <p>Если нет активности более 5 дней:</p>
+        <ul>
+          <li>ветка признается "зависшей";</li>
+          <li>автоматически закрывается;</li>
+          <li>участники возвращаются к одной ветке.</li>
+        </ul>
+      </section>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ОТКРЫТИЕ И ЗАКРЫТИЕ</h3>
-                <ul>
-                    <li>Ветка открывается по согласию участников.</li>
-                    <li>Закрывается: по завершении линии, по согласию, по решению администрации.</li>
-                    <li>После закрытия норма пересчитывается.</li>
-                </ul>
-            </div>
+      <p>Три и более веток – нарушение, сокращение до двух.</p>
+      <p>Исключения – только с разрешения владельца.</p>
 
-            <div class="rule-block">
-                <h3><span class="badge">◈</span> ЗАВИСШИЕ ВЕТКИ</h3>
-                <p>Если нет активности более 5 дней:</p>
-                <ul>
-                    <li>ветка признается "зависшей";</li>
-                    <li>автоматически закрывается;</li>
-                    <li>участники возвращаются к одной ветке.</li>
-                </ul>
-                <p style="margin-top: 0.5rem;">Три и более веток – нарушение, сокращение до двух. Исключения – только с разрешения владельца.</p>
-            </div>
-        </div>
+      <div class="important-box">
+        <p>КАЖДАЯ ВЕТКА УЧИТЫВАЕТСЯ ПРИ ПРОВЕРКЕ НОРМ</p>
+        <p>НАРУШЕНИЕ ВЛЕЧЕТ ВАРН ИЛИ БАН</p>
+      </div>
+    </main>
+  </div>
 
-        <div class="divider"></div>
+  <script>
+    // Летящие искры от факелов
+    function createEmber() {
+      const side = Math.random() < 0.5 ? 'left' : 'right';
+      const torch = document.querySelector(`.torch.${side}`);
+      if (!torch) return;
 
-        <!-- ЗАКЛЮЧИТЕЛЬНЫЕ СЛОВА -->
-        <div style="text-align: center; margin: 2rem 0 1rem;">
-            <p style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #4a3520; letter-spacing: 2px;">
-                ⚔ КАЖДАЯ ВЕТКА УЧИТЫВАЕТСЯ ПРИ ПРОВЕРКЕ НОРМ<br>
-                НАРУШЕНИЕ ВЛЕЧЕТ ВАРН ИЛИ БАН
-            </p>
-        </div>
+      const rect = torch.getBoundingClientRect();
+      const x = rect.left + rect.width / 2 + (Math.random() - 0.5) * 50;
+      const y = rect.top - 20;
 
-        <!-- ФУТЕР (убрал "правила утверждены") -->
-        <div class="footer">
-            <span>Luogo di Morte</span> &nbsp;·&nbsp; <span>соблюдай кодекс</span>
-        </div>
-    </div>
+      const ember = document.createElement('div');
+      ember.classList.add('ember');
+      ember.style.left = `${x}px`;
+      ember.style.top = `${y}px`;
+      ember.style.setProperty('--drift', `${(Math.random() - 0.5) * 80}px`);
+      ember.style.animationDuration = `${Math.random() * 2 + 2}s`;
 
+      document.body.appendChild(ember);
+
+      setTimeout(() => {
+        ember.remove();
+      }, 4000);
+    }
+
+    setInterval(createEmber, 220);
+  </script>
 </body>
-                </html>
+    </html>
