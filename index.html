@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luogo di Morte · Правила</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== ОБЩИЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #b8aa9a; /* фон под старую бумагу */
+            padding: 2rem 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            background-image: 
+                linear-gradient(45deg, rgba(200, 180, 160, 0.2) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(200, 180, 160, 0.2) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(200, 180, 160, 0.2) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(200, 180, 160, 0.2) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        /* ===== СВИТОК (контейнер) ===== */
+        .scroll {
+            max-width: 900px;
+            width: 100%;
+            background: #f4ede4; /* цвет старой бумаги */
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 2px #d6c8b8 inset, 0 0 0 4px #e8ddd0 inset;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        /* Декоративная рамка (как старый манускрипт) */
+        .scroll::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            border: 1px solid #cbb8a6;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        /* ===== ЗАГОЛОВОК ===== */
+        .title {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 2.8rem;
+            color: #4a3520;
+            letter-spacing: 4px;
+            text-shadow: 1px 1px 0 #d6c8b8;
+            border-bottom: 2px solid #cbb8a6;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .title::after {
+            content: '✦';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f4ede4;
+            padding: 0 10px;
+            color: #8a7a6a;
+            font-size: 1.2rem;
+        }
+        .subtitle {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: 1.2rem;
+            color: #6a5a4a;
+            letter-spacing: 6px;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* ===== РАЗДЕЛЫ ===== */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #3d2a1a;
+            border-bottom: 1px dashed #b8a898;
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.8rem;
+            letter-spacing: 2px;
+        }
+        .section h2 .ornament {
+            font-weight: 400;
+            color: #8a7a6a;
+            font-size: 1.2rem;
+            margin: 0 0.5rem;
+        }
+
+        .rule-block {
+            margin-bottom: 1.2rem;
+            padding-left: 0.5rem;
+            border-left: 3px solid #d6c8b8;
+            padding-left: 1rem;
+        }
+        .rule-block h3 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #4a3520;
+            margin-bottom: 0.2rem;
+            letter-spacing: 1px;
+        }
+        .rule-block h3 .badge {
+            font-weight: 400;
+            color: #8a7a6a;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+        .rule-block p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #3d322a;
+            margin-bottom: 0.4rem;
+        }
+        .rule-block ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+        .rule-block ul li {
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #3d322a;
+            margin-bottom: 0.2rem;
+        }
+        .rule-block ul li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: #8a7a6a;
+        }
+
+        .rule-block .highlight {
+            background: rgba(200, 180, 160, 0.3);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #3d2a1a;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: repeating-linear-gradient(90deg, #cbb8a6, #cbb8a6 8px, transparent 8px, transparent 16px);
+            margin: 1.5rem 0;
+        }
+
+        /* ===== КОДОВОЕ СЛОВО ===== */
+        .codeword {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #4a3520;
+            border: 2px double #cbb8a6;
+            padding: 0.8rem 1.5rem;
+            margin: 2rem 0;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            letter-spacing: 4px;
+            background: rgba(220, 200, 180, 0.2);
+        }
+        .codeword small {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 1rem;
+            color: #6a5a4a;
+            letter-spacing: 2px;
+            display: block;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #cbb8a6;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            color: #6a5a4a;
+            letter-spacing: 2px;
+        }
+        .footer span {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 640px) {
+            .scroll { padding: 1.5rem 1rem; }
+            .title { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .section h2 { font-size: 1.3rem; }
+            .rule-block h3 { font-size: 1rem; }
+            .codeword { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scroll">
+        <!-- ЗАГОЛОВОК -->
+        <h1 class="title">ПРАВИЛА ФЛУДА</h1>
+        <div class="subtitle">— Luogo di Morte —</div>
+
+        <!-- РАЗДЕЛ I -->
+        <div class="section">
+            <h2>◈ ПОЛИТИКА</h2>
+            <div class="rule-block">
+                <p>Обсуждение политических тем, идеологий, государственных режимов и актуальных политических деятелей строго запрещено. Подобные дискуссии провоцируют разногласия и перерастают в конфликты. Нарушение карается временным ограничением на отправку сообщений (МУТ).</p>
+            </div>
+
+            <h2>◈ СПАМ</h2>
+            <div class="rule-block">
+                <p>Спамом признается:</p>
+                <ul>
+                    <li>отправка однотипных, бессмысленных или повторяющихся сообщений;</li>
+                    <li>чрезмерное использование визуального контента (видео, GIF, стикеры, фотографии).</li>
+                </ul>
+                <p>Критический порог – более шести подобных сообщений подряд. Мера наказания (МУТ или БАН) выбирается администрацией.</p>
+            </div>
+
+            <h2>◈ МАТЕРИАЛЫ 18+</h2>
+            <div class="rule-block">
+                <p>Размещение фото-, видео- и текстовых материалов эротического или порнографического характера <strong>ДОПУСКАЕТСЯ</strong> при строгом соблюдении двух условий:</p>
+                <ul>
+                    <li>обязательное использование цензуры (блюр);</li>
+                    <li>предварительное текстовое предупреждение о наличии контента 18+.</li>
+                </ul>
+                <p>Отсутствие блюра или предупреждения влечет удаление контента и ВАРН.</p>
+            </div>
+
+            <h2>◈ РЕКЛАМА СТОРОННИХ РЕСУРСОВ</h2>
+            <div class="rule-block">
+                <p>Публичное размещение ссылок, приглашений или анонсов сторонних ресурсов <strong>ЗАПРЕЩЕНО</strong>. Для рекламы предусмотрены отдельные каналы. Первое нарушение – ВАРН. Повторное – БАН.</p>
+            </div>
+
+            <h2>◈ ОСКОРБЛЕНИЯ И ТОКСИЧНОСТЬ</h2>
+            <div class="rule-block">
+                <p>Оскорбления в любой форме категорически недопустимы. Отговорки в духе «это была шутка» <strong>НЕ ПРИНИМАЮТСЯ</strong>.</p>
+                <ul>
+                    <li>Сексизм, расизм, оскорбления по национальному или религиозному признаку – <span class="highlight">МГНОВЕННЫЙ БАН</span>.</li>
+                    <li>Запрещается осуждать участников за предпочтения в пейрингах.</li>
+                </ul>
+                <p>Стандартное наказание – ВАРН. При рецидиве – БАН.</p>
+            </div>
+
+            <h2>◈ КОНФЛИКТЫ МЕЖДУ УЧАСТНИКАМИ</h2>
+            <div class="rule-block">
+                <p>При возникновении спора рекомендуется:</p>
+                <ul>
+                    <li>перенести обсуждение в ЛИЧНЫЕ СООБЩЕНИЯ;</li>
+                    <li>либо прекратить спор.</li>
+                </ul>
+                <p>Наказание (ВАРН или БАН) применяется ко ВСЕМ сторонам конфликта.</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- РАЗДЕЛ II — РОЛЕВАЯ СИСТЕМА -->
+        <div class="section">
+            <h2>⊱ РОЛЕВАЯ СИСТЕМА ⊰</h2>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ВЫБОР РОЛИ</h3>
+                <p>Каждому участнику разрешается взять <strong>ТОЛЬКО ОДНУ</strong> роль. Исключения не делаются. Смена роли возможна только после официального отказа.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ОБЯЗАТЕЛЬНОСТЬ ПОСТОВ</h3>
+                <p>Ролевая игра является <strong>ОБЯЗАТЕЛЬНОЙ</strong>. Каждый участник обязан вести персонажа и публиковать посты.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ИНТИМ И НАСИЛИЕ В ПОСТАХ</h3>
+                <p>Описание сцен физического насилия, жестокости, а также постельных сцен <strong>РАЗРЕШЕНО</strong> при соблюдении условий:</p>
+                <ul>
+                    <li>контент скрыт под спойлер;</li>
+                    <li>наличие текстового предупреждения в начале поста.</li>
+                </ul>
+                <p>Нарушение – ВАРН. Систематическое – БАН.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ФЛУД В РОЛЕВОМ ЧАТЕ</h3>
+                <p>Флуд в канале для постов <strong>ЗАПРЕЩЕН</strong>. Для дополнения поста используйте редактирование с пометкой //. За систематический флуд – ВАРН.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> МИНИМАЛЬНЫЙ ОБЪЕМ ПОСТОВ</h3>
+                <p>Минимальный размер поста – <strong>от 30 строк</strong> в телефонном формате. Чайлд имеет право дать время на доработку. При игнорировании – ВАРН.</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- НАКОПЛЕНИЕ НАКАЗАНИЙ -->
+        <div class="section">
+            <h2>⊱ НАКОПЛЕНИЕ НАКАЗАНИЙ ⊰</h2>
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> СИСТЕМА ШТРАФОВ</h3>
+                <p>Три (3) предупреждения (ВАРНА) в течение активного периода приравниваются к автоматической БЛОКИРОВКЕ (БАНУ).</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- КОДОВОЕ СЛОВО -->
+        <div class="codeword">
+            ⚔ КОДОВОЕ СЛОВО – <strong>"НОЖ"</strong>
+            <small>Правила вступают в силу немедленно</small>
+        </div>
+
+        <!-- РАЗДЕЛ III — НОРМЫ АКТИВНОСТИ -->
+        <div class="section">
+            <h2>⊱ НОРМЫ АКТИВНОСТИ ⊰</h2>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> НЕДЕЛЬНЫЕ НОРМАТИВЫ</h3>
+                <p>Каждый участник обязан еженедельно выполнять:</p>
+                <ul>
+                    <li>ФЛУД-ЧАТ — <strong>100 сообщений</strong> за календарную неделю.</li>
+                    <li>РОЛЕВОЙ ЧАТ — <strong>1 развернутый пост</strong> за календарную неделю.</li>
+                </ul>
+                <p>Отсчет ведется с момента подтверждения участия.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> НЕАКТИВНОСТЬ</h3>
+                <p>Отсутствие активности в течение 3 дней подряд расценивается как нарушение. Исключения:</p>
+                <ul>
+                    <li>участник предупредил об отсутствии;</li>
+                    <li>участник оформил REST.</li>
+                </ul>
+                <p>При отсутствии предупреждения или реста от 3 дней – <strong>ИСКЛЮЧЕНИЕ</strong>.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ИММУНИТЕТ ДЛЯ НОВЫХ</h3>
+                <p>Каждый новый участник получает льготный период – <strong>ПЕРВЫЕ 5 дней</strong>. В этот срок:</p>
+                <ul>
+                    <li>не проверяется на выполнение нормы;</li>
+                    <li>не подлежит чистке за неактивность.</li>
+                </ul>
+                <p>По истечении 5 дней участник переходит в общий режим.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> НЕДОВЫПОЛНЕНИЕ НОРМЫ</h3>
+                <p>Если по итогам недели участнику до выполнения нормы <strong>НЕ ХВАТИЛО 10 сообщений или МЕНЕЕ</strong> – выносится ОБЫЧНОЕ ПРЕДУПРЕЖДЕНИЕ (ВАРН). Если отставание превышает 10 сообщений – наказание ужесточается.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> АКТИВАЦИЯ РЕСТА</h3>
+                <p>Участник имеет право взять REST на срок до 14 дней. Оформление через бота или личное обращение к владельцу. Во время реста нормы НЕ применяются, роль сохраняется.</p>
+            </div>
+
+            <div class="rule-block">
+                <p style="font-weight: 600; margin-top: 1rem; color: #4a3520;">⚠ НАРУШЕНИЕ НОРМ ВЛЕЧЕТ ЗА СОБОЙ САНКЦИИ</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- РЕГЛАМЕНТ СОРОЛЬСТВА -->
+        <div class="section">
+            <h2>⊱ РЕГЛАМЕНТ СОРОЛЬСТВА ⊰</h2>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ОБЩИЕ ПОЛОЖЕНИЯ</h3>
+                <p>Сорольство — парное взаимодействие между персонажами, основанное на сюжетной связке.</p>
+                <p>Если участник уже в проекте и его роль предполагает конкретную парную связку, он имеет <strong>ПРИОРИТЕТНОЕ ПРАВО</strong> на взаимодействие с входящим.</p>
+                <ul>
+                    <li>Входящий, выбирая роль, соглашается на сорольство с ожидающим.</li>
+                    <li>Отказ – основание для <strong>ОТКЛОНЕНИЯ ЗАЯВКИ</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ОТВЕТСТВЕННОСТЬ ВХОДЯЩЕГО</h3>
+                <p>Входящий участник обязуется:</p>
+                <ul>
+                    <li>взаимодействовать с ожидающим в рамках сюжета;</li>
+                    <li>поддерживать регулярность совместных постов;</li>
+                    <li>не игнорировать сорола.</li>
+                </ul>
+                <p>Игнорирование – нарушение условий участия.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ОТКАЗ СО СТОРОНЫ ОЖИДАЮЩЕГО</h3>
+                <p>Ожидающий имеет право отказаться <strong>ТОЛЬКО</strong> по объективным причинам:</p>
+                <ul>
+                    <li>несоответствие персонажа ожиданиям;</li>
+                    <li>нарушения правил со стороны входящего;</li>
+                    <li>личная договоренность.</li>
+                </ul>
+                <p>В таком случае входящий <strong>ОБЯЗАН СМЕНИТЬ РОЛЬ</strong>, так как ожидающий был в проекте ПЕРВЫМ.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> НЕОБОСНОВАННЫЙ ОТКАЗ</h3>
+                <p>Если ожидающий отказывается без уважительной причины («просто не хочу»):</p>
+                <ul>
+                    <li>проблема переходит к ожидающему;</li>
+                    <li>входящий НЕ обязан менять роль;</li>
+                    <li>администрация не имеет права принудительно менять роль участника.</li>
+                </ul>
+                <p>При повторных случаях – санкции к ожидающему.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ПОРЯДОК ДЕЙСТВИЙ</h3>
+                <p><strong>Шаг 1.</strong> Участник обращается к администрации.<br>
+                <strong>Шаг 2.</strong> Администрация запрашивает объяснение.<br>
+                <strong>Шаг 3.</strong> Принимается решение.<br>
+                <strong>Шаг 4.</strong> Решение доводится до обеих сторон.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> КЛЮЧЕВОЙ ПРИНЦИП</h3>
+                <ul>
+                    <li>Приоритет защиты – у старожила.</li>
+                    <li>Приоритет справедливости – у того, чей отказ обоснован.</li>
+                    <li>Недопустимо принуждение к сорольству без веских оснований.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ВЕТКИ -->
+        <div class="section">
+            <h2>⊱ ВЕТКИ ⊰</h2>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ОБЩИЕ ПОЛОЖЕНИЯ</h3>
+                <p>Ветка — отдельная сюжетная линия, в рамках которой взаимодействуют персонажи.</p>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> МАКСИМАЛЬНОЕ КОЛИЧЕСТВО</h3>
+                <p>Одновременно доступно <strong>ДВЕ</strong> активные ветки на одного участника.</p>
+                <ul>
+                    <li>Одна ветка = взаимодействие в рамках одного диалога.</li>
+                    <li>Стандартный состав – до 3 участников.</li>
+                </ul>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> НОРМА ПОСТОВ</h3>
+                <ul>
+                    <li>2 ветки – 2 поста в неделю (по одному в каждой).</li>
+                    <li>При двух ветках – пост в КАЖДОЙ из них, либо один развернутый, охватывающий обе.</li>
+                </ul>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ЦЕЛЬ ВЕТОК</h3>
+                <ul>
+                    <li>Возможность ролить с разными участниками без смешивания сюжетных линий.</li>
+                    <li>Сохранение приоритетных связок – если вашу основную роль ждет сорол, вы можете параллельно общаться с другим участником.</li>
+                </ul>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ПРИОРИТЕТ ОСНОВНОЙ ВЕТКИ</h3>
+                <p>Если роль имеет закрепленную сорольную связку:</p>
+                <ul>
+                    <li>ветка с этим соролом – ОСНОВНАЯ;</li>
+                    <li>вторая – ДОПОЛНИТЕЛЬНАЯ;</li>
+                    <li>основная ветка имеет приоритет по времени и качеству.</li>
+                </ul>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ОТКРЫТИЕ И ЗАКРЫТИЕ</h3>
+                <ul>
+                    <li>Ветка открывается по согласию участников.</li>
+                    <li>Закрывается: по завершении линии, по согласию, по решению администрации.</li>
+                    <li>После закрытия норма пересчитывается.</li>
+                </ul>
+            </div>
+
+            <div class="rule-block">
+                <h3><span class="badge">◈</span> ЗАВИСШИЕ ВЕТКИ</h3>
+                <p>Если нет активности более 5 дней:</p>
+                <ul>
+                    <li>ветка признается "зависшей";</li>
+                    <li>автоматически закрывается;</li>
+                    <li>участники возвращаются к одной ветке.</li>
+                </ul>
+                <p style="margin-top: 0.5rem;">Три и более веток – нарушение, сокращение до двух. Исключения – только с разрешения владельца.</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ЗАКЛЮЧИТЕЛЬНЫЕ СЛОВА -->
+        <div style="text-align: center; margin: 2rem 0 1rem;">
+            <p style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #4a3520; letter-spacing: 2px;">
+                ⚔ КАЖДАЯ ВЕТКА УЧИТЫВАЕТСЯ ПРИ ПРОВЕРКЕ НОРМ<br>
+                НАРУШЕНИЕ ВЛЕЧЕТ ВАРН ИЛИ БАН
+            </p>
+        </div>
+
+        <!-- ФУТЕР -->
+        <div class="footer">
+            <span>Luogo di Morte</span> &nbsp;·&nbsp; правила утверждены
+        </div>
+    </div>
+
+</body>
+  </html>
