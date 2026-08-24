@@ -3,62 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Luogo di Morte — Правила, Анкета, Расы</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Luogo di Morte</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=MedievalSharp&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --parchment-base: #f2eadb;
-      --parchment-dark: #d8c9ae;
-      --ink: #3a2c1e;
-      --ink-soft: #5d4b38;
-      --accent: #8b7a61;
-      --gold: #c9a567;
-      --stone-dark: #191411;
-      --shadow-deep: rgba(0, 0, 0, 0.8);
-      --candle-glow: rgba(255, 180, 90, 0.25);
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
     body {
       min-height: 100vh;
-      background-color: var(--stone-dark);
+      background-color: #191411;
       background-image:
         radial-gradient(circle at 15% 25%, rgba(255,255,255,0.04) 0%, transparent 35%),
         radial-gradient(circle at 85% 70%, rgba(0,0,0,0.45) 0%, transparent 45%),
         repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 5px);
       font-family: 'IM Fell English', 'Cormorant Garamond', serif;
-      color: var(--ink);
-      line-height: 1.7;
+      color: #3a2c1e;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 2rem 1rem;
-      position: relative;
-      overflow-x: hidden;
     }
-
-    /* мягкий свет от свечей */
     .candle-glow {
-      position: fixed;
-      z-index: 90;
-      pointer-events: none;
-      border-radius: 50%;
-      filter: blur(20px);
-      mix-blend-mode: screen;
+      position: fixed; z-index: 90; pointer-events: none; border-radius: 50%;
+      filter: blur(20px); mix-blend-mode: screen;
     }
     .candle-glow.left {
-      left: -50px; top: 12%;
-      width: 240px; height: 240px;
+      left: -50px; top: 12%; width: 240px; height: 240px;
       background: radial-gradient(circle, rgba(255,190,120,0.35) 0%, transparent 70%);
       animation: flickerLeft 6s ease-in-out infinite alternate;
     }
     .candle-glow.right {
-      right: -50px; top: 10%;
-      width: 220px; height: 220px;
+      right: -50px; top: 10%; width: 220px; height: 220px;
       background: radial-gradient(circle, rgba(255,190,120,0.3) 0%, transparent 70%);
       animation: flickerRight 5s ease-in-out infinite alternate;
     }
@@ -72,542 +45,60 @@
       50% { opacity: 0.7; transform: scale(1); }
       100% { opacity: 0.8; transform: scale(1.05); }
     }
-
-    /* навигация */
     .nav {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
+      position: relative; z-index: 10; display: flex; gap: 1.5rem;
+      justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap;
     }
     .nav a {
-      font-family: 'Cinzel', serif;
-      color: var(--gold);
-      text-decoration: none;
-      font-size: 1.3rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.5rem 1.2rem;
-      border: 1px solid rgba(200,160,100,0.4);
-      border-radius: 30px;
-      background: rgba(30,25,20,0.7);
+      font-family: 'Cinzel', serif; color: #c9a567; text-decoration: none;
+      font-size: 1.3rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.5rem 1.2rem; border: 1px solid rgba(200,160,100,0.4);
+      border-radius: 30px; background: rgba(30,25,20,0.7);
       transition: background 0.3s, color 0.3s;
     }
-    .nav a:hover {
-      background: rgba(200,160,100,0.3);
-      color: #fff;
-    }
-
-    /* основной лист */
+    .nav a:hover { background: rgba(200,160,100,0.3); color: #fff; }
     .manuscript {
-      position: relative;
-      z-index: 5;
-      max-width: 920px;
-      width: 100%;
-      background: var(--parchment-base);
-      padding: 3rem 2.5rem;
-      border: 2px solid var(--accent);
-      border-radius: 12px;
-      box-shadow: 0 20px 40px var(--shadow-deep), inset 0 0 60px rgba(120,100,70,0.3);
-      transform: rotate(-0.3deg);
-      filter: sepia(0.15);
-    }
-
-    /* лёгкая текстура пергамента */
-    .manuscript::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 12px;
-      background-image:
-        radial-gradient(circle at 10% 10%, rgba(110,90,60,0.15) 0%, transparent 20%),
-        radial-gradient(circle at 90% 15%, rgba(110,90,60,0.1) 0%, transparent 25%),
-        radial-gradient(circle at 70% 85%, rgba(110,90,60,0.12) 0%, transparent 30%),
-        repeating-linear-gradient(0deg, rgba(160,140,110,0.05) 0px, rgba(160,140,110,0.05) 1px, transparent 1px, transparent 3px),
-        repeating-linear-gradient(90deg, rgba(160,140,110,0.04) 0px, rgba(160,140,110,0.04) 1px, transparent 1px, transparent 4px);
-      mix-blend-mode: multiply;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    /* рваные края */
-    .manuscript::after {
-      content: "";
-      position: absolute;
-      top: -5px; left: -5px; right: -5px; bottom: -5px;
-      border: 2px solid rgba(160,140,110,0.3);
-      border-radius: 14px;
-      pointer-events: none;
-      z-index: -2;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-      clip-path: polygon(0% 2%, 5% 1%, 10% 3%, 20% 0%, 30% 2%, 45% 1%, 60% 3%, 75% 0%, 90% 2%, 100% 1%, 100% 98%, 90% 99%, 75% 97%, 60% 100%, 45% 98%, 30% 99%, 20% 97%, 10% 100%, 5% 98%, 0% 99%);
-    }
-
-    /* заголовки */
-    h1, h2 {
-      font-family: 'MedievalSharp', 'Cinzel', serif;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-align: center;
-      margin-bottom: 1rem;
+      position: relative; z-index: 5; max-width: 600px; width: 100%;
+      background: #f2eadb; padding: 3rem 2.5rem; border: 2px solid #8b7a61;
+      border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.8),
+      inset 0 0 60px rgba(120,100,70,0.3);
+      transform: rotate(-0.3deg); filter: sepia(0.15); text-align: center;
     }
     h1 {
-      font-size: 2.8rem;
-      letter-spacing: 0.15em;
-      padding-bottom: 0.5em;
-      border-bottom: 2px solid var(--accent);
+      font-family: 'MedievalSharp', 'Cinzel', serif; font-size: 3rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: #3a2c1e;
+      margin-bottom: 2rem;
     }
-    h2 {
-      font-size: 2rem;
-      letter-spacing: 0.1em;
-      margin-top: 2.5rem;
-      margin-bottom: 1.5rem;
+    .links {
+      display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;
     }
-    .part-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      letter-spacing: 0.2em;
-      text-align: center;
-      color: var(--ink-soft);
-      margin: 2rem 0 1rem;
+    .links a {
+      font-family: 'Cinzel', serif; color: #3a2c1e; text-decoration: none;
+      font-size: 1.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 1rem 2rem; border: 2px solid #8b7a61; border-radius: 8px;
+      background: rgba(255, 250, 240, 0.5); transition: background 0.3s, transform 0.3s;
     }
-    .rule-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
-      border-left: 4px solid var(--accent);
-      padding-left: 1rem;
-      margin: 1.8rem 0 0.8rem;
-    }
-
-    p, li {
-      font-size: 1.15rem;
-      margin-bottom: 0.8rem;
-    }
-    ul {
-      margin-left: 2rem;
-      list-style: none;
-    }
-    ul li::before {
-      content: '◆';
-      color: var(--accent);
-      margin-right: 0.5rem;
-    }
-
-    .important-box {
-      background: rgba(120,100,70,0.15);
-      border: 2px solid var(--accent);
-      padding: 1.5rem;
-      text-align: center;
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      margin: 2rem 0;
-      text-transform: uppercase;
-    }
-
-    .drop-cap::first-letter {
-      font-family: 'Cinzel', serif;
-      font-size: 4rem;
-      float: left;
-      line-height: 0.8;
-      padding-right: 10px;
-      color: var(--accent);
-    }
-
-    .field {
-      margin-bottom: 1.5rem;
-    }
-    .field-label {
-      font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
-      border-bottom: 1px dashed var(--accent);
-      display: inline-block;
-      margin-bottom: 0.3rem;
-    }
-    .field-desc {
-      font-style: italic;
-      color: var(--ink-soft);
-      font-size: 1rem;
-    }
-
-    @media (max-width: 768px) {
-      .manuscript { padding: 2rem 1.2rem; }
-      h1 { font-size: 2rem; }
-      h2 { font-size: 1.6rem; }
-      .nav a { font-size: 1rem; padding: 0.3rem 0.8rem; }
-    }
+    .links a:hover { background: rgba(200,160,100,0.3); transform: scale(1.02); }
   </style>
 </head>
 <body>
-
-  <!-- свет от свечей -->
   <div class="candle-glow left"></div>
   <div class="candle-glow right"></div>
 
-  <!-- навигация -->
   <nav class="nav">
-    <a href="#rules">Правила</a>
-    <a href="#anketa">Анкета</a>
-    <a href="#rasy">Расы</a>
+    <a href="rules.html">Правила</a>
+    <a href="anketa.html">Анкета</a>
+    <a href="rasy.html">Расы</a>
   </nav>
 
   <div class="manuscript">
-
-    <!-- ===== ПРАВИЛА ФЛУДА ===== -->
-    <section id="rules">
-      <h1>ПРАВИЛА ФЛУДА</h1>
-
-      <div class="rule-title">ПОЛИТИКА</div>
-      <p class="drop-cap">Обсуждение политических тем, идеологий, государственных режимов и актуальных политических деятелей строго запрещено. Подобные дискуссии провоцируют разногласия и перерастают в конфликты. Нарушение карается временным ограничением на отправку сообщений (МУТ).</p>
-
-      <div class="rule-title">СПАМ</div>
-      <p>Спамом признается:</p>
-      <ul>
-        <li>отправка однотипных, бессмысленных или повторяющихся сообщений;</li>
-        <li>чрезмерное использование визуального контента (видео, GIF, стикеры, фотографии).</li>
-      </ul>
-      <p>Критический порог – более шести подобных сообщений подряд. Мера наказания (МУТ или БАН) выбирается администрацией.</p>
-
-      <div class="rule-title">МАТЕРИАЛЫ 18+</div>
-      <p>Размещение фото-, видео- и текстовых материалов эротического или порнографического характера ДОПУСКАЕТСЯ при строгом соблюдении двух условий:</p>
-      <ul>
-        <li>обязательное использование цензуры (блюр);</li>
-        <li>предварительное текстовое предупреждение о наличии контента 18+.</li>
-      </ul>
-      <p>Отсутствие блюра или предупреждения влечет удаление контента и ВАРН.</p>
-
-      <div class="rule-title">РЕКЛАМА СТОРОННИХ РЕСУРСОВ</div>
-      <p>Публичное размещение ссылок, приглашений или анонсов сторонних ресурсов ЗАПРЕЩЕНО. Для рекламы предусмотрены отдельные каналы. Первое нарушение – ВАРН. Повторное – БАН.</p>
-
-      <div class="rule-title">ОСКОРБЛЕНИЯ И ТОКСИЧНОСТЬ</div>
-      <p>Оскорбления в любой форме категорически недопустимы. Отговорки в духе «это была шутка» НЕ ПРИНИМАЮТСЯ.</p>
-      <ul>
-        <li>Сексизм, расизм, оскорбления по национальному или религиозному признаку – МГНОВЕННЫЙ БАН.</li>
-        <li>Запрещается осуждать участников за предпочтения в пейрингах.</li>
-      </ul>
-      <p>Стандартное наказание – ВАРН. При рецидиве – БАН.</p>
-
-      <div class="rule-title">КОНФЛИКТЫ МЕЖДУ УЧАСТНИКАМИ</div>
-      <p>При возникновении спора рекомендуется:</p>
-      <ul>
-        <li>перенести обсуждение в ЛИЧНЫЕ СООБЩЕНИЯ;</li>
-        <li>либо прекратить спор.</li>
-      </ul>
-      <p>Наказание (ВАРН или БАН) применяется ко ВСЕМ сторонам конфликта.</p>
-
-      <div class="part-title">РАЗДЕЛ II. РОЛЕВАЯ СИСТЕМА</div>
-
-      <div class="rule-title">ВЫБОР РОЛИ</div>
-      <p>Каждому участнику разрешается взять ТОЛЬКО ОДНУ роль. Исключения не делаются. Смена роли возможна только после официального отказа.</p>
-
-      <div class="rule-title">ОБЯЗАТЕЛЬНОСТЬ ПОСТОВ</div>
-      <p>Ролевая игра является ОБЯЗАТЕЛЬНОЙ. Каждый участник обязан вести персонажа и публиковать посты.</p>
-
-      <div class="rule-title">ИНТИМ И НАСИЛИЕ В ПОСТАХ</div>
-      <p>Описание сцен физического насилия, жестокости, а также постельных сцен РАЗРЕШЕНО при соблюдении условий:</p>
-      <ul>
-        <li>контент скрыт под спойлер;</li>
-        <li>наличие текстового предупреждения в начале поста.</li>
-      </ul>
-      <p>Нарушение – ВАРН. Систематическое – БАН.</p>
-
-      <div class="rule-title">ФЛУД В РОЛЕВОМ ЧАТЕ</div>
-      <p>Флуд в канале для постов ЗАПРЕЩЕН. Для дополнения поста используйте редактирование с пометкой //. За систематический флуд – ВАРН.</p>
-
-      <div class="rule-title">МИНИМАЛЬНЫЙ ОБЪЕМ ПОСТОВ</div>
-      <p>Минимальный размер поста – от 30 строк в телефонном формате. Чайлд имеет право дать время на доработку. При игнорировании – ВАРН.</p>
-
-      <div class="part-title">НАКОПЛЕНИЕ НАКАЗАНИЙ</div>
-      <div class="rule-title">СИСТЕМА ШТРАФОВ</div>
-      <p>Три (3) предупреждения (ВАРНА) в течение активного периода приравниваются к автоматической БЛОКИРОВКЕ (БАНУ).</p>
-
-      <div class="important-box">
-        <p>КОДОВОЕ СЛОВО ДЛЯ ПОДТВЕРЖДЕНИЯ – "НОЖ"</p>
-        <p>ПРАВИЛА ВСТУПАЮТ В СИЛУ НЕМЕДЛЕННО</p>
-      </div>
-
-      <h2>НОРМЫ АКТИВНОСТИ</h2>
-      <div class="part-title">РАЗДЕЛ III. НОРМЫ АКТИВНОСТИ</div>
-
-      <div class="rule-title">НЕДЕЛЬНЫЕ НОРМАТИВЫ</div>
-      <p>Каждый участник обязан еженедельно выполнять:</p>
-      <ul>
-        <li>ФЛУД-ЧАТ — 100 сообщений за календарную неделю.</li>
-        <li>РОЛЕВОЙ ЧАТ — 1 развернутый пост за календарную неделю.</li>
-      </ul>
-      <p>Отсчет ведется с момента подтверждения участия.</p>
-
-      <div class="rule-title">НЕАКТИВНОСТЬ</div>
-      <p>Отсутствие активности в течение 3 дней подряд расценивается как нарушение.</p>
-      <p>Исключения:</p>
-      <ul>
-        <li>участник предупредил об отсутствии;</li>
-        <li>участник оформил REST.</li>
-      </ul>
-      <p>При отсутствии предупреждения или реста от 3 дней – ИСКЛЮЧЕНИЕ.</p>
-
-      <div class="rule-title">ИММУНИТЕТ ДЛЯ НОВЫХ</div>
-      <p>Каждый новый участник получает льготный период – ПЕРВЫЕ 5 дней.</p>
-      <p>В этот срок:</p>
-      <ul>
-        <li>не проверяется на выполнение нормы;</li>
-        <li>не подлежит чистке за неактивность.</li>
-      </ul>
-      <p>По истечении 5 дней участник переходит в общий режим.</p>
-
-      <div class="rule-title">НЕДОВЫПОЛНЕНИЕ НОРМЫ</div>
-      <p>Если по итогам недели участнику до выполнения нормы НЕ ХВАТАЛО 10 сообщений или МЕНЕЕ – выносится ОБЫЧНОЕ ПРЕДУПРЕЖДЕНИЕ (ВАРН).</p>
-      <p>Если отставание превышает 10 сообщений – наказание ужесточается.</p>
-
-      <div class="rule-title">АКТИВАЦИЯ РЕСТА</div>
-      <p>Участник имеет право взять REST на срок до 14 дней.</p>
-      <p>Оформление через бота или личное обращение к владельцу.</p>
-      <p>Во время реста нормы НЕ применяются, роль сохраняется.</p>
-
-      <div class="important-box">
-        <p>НАРУШЕНИЕ НОРМ ВЛЕЧЕТ ЗА СОБОЙ САНКЦИИ</p>
-      </div>
-
-      <h2>РЕГЛАМЕНТ СОРОЛЬСТВА</h2>
-      <div class="part-title">ОБЩИЕ ПОЛОЖЕНИЯ</div>
-      <p>Сорольство — парное взаимодействие между персонажами, основанное на сюжетной связке.</p>
-      <p>Если участник уже в проекте и его роль предполагает конкретную парную связку, он имеет ПРИОРИТЕТНОЕ ПРАВО на взаимодействие с входящим.</p>
-      <ul>
-        <li>Входящий, выбирая роль, соглашается на сорольство с ожидающим.</li>
-        <li>Отказ – основание для ОТКЛОНЕНИЯ ЗАЯВКИ.</li>
-      </ul>
-
-      <div class="rule-title">ОТВЕТСТВЕННОСТЬ ВХОДЯЩЕГО</div>
-      <p>Входящий участник обязуется:</p>
-      <ul>
-        <li>взаимодействовать с ожидающим в рамках сюжета;</li>
-        <li>поддерживать регулярность совместных постов;</li>
-        <li>не игнорировать сорола.</li>
-      </ul>
-      <p>Игнорирование – нарушение условий участия.</p>
-
-      <div class="rule-title">ОТКАЗ СО СТОРОНЫ ОЖИДАЮЩЕГО</div>
-      <p>Ожидающий имеет право отказаться ТОЛЬКО по объективным причинам:</p>
-      <ul>
-        <li>несоответствие персонажа ожиданиям;</li>
-        <li>нарушения правил со стороны входящего;</li>
-        <li>личная договоренность.</li>
-      </ul>
-      <p>В таком случае входящий ОБЯЗАН СМЕНИТЬ РОЛЬ, так как ожидающий был в проекте ПЕРВЫМ.</p>
-
-      <div class="rule-title">НЕОБОСНОВАННЫЙ ОТКАЗ</div>
-      <p>Если ожидающий отказывается без уважительной причины («просто не хочу»):</p>
-      <ul>
-        <li>проблема переходит к ожидающему;</li>
-        <li>входящий НЕ обязан менять роль;</li>
-        <li>администрация не имеет права принудительно менять роль участника.</li>
-      </ul>
-      <p>При повторных случаях – санкции к ожидающему.</p>
-
-      <div class="rule-title">ПОРЯДОК ДЕЙСТВИЙ</div>
-      <p>Шаг 1. Участник обращается к администрации.</p>
-      <p>Шаг 2. Администрация запрашивает объяснение.</p>
-      <p>Шаг 3. Принимается решение.</p>
-      <p>Шаг 4. Решение доводится до обеих сторон.</p>
-
-      <div class="rule-title">КЛЮЧЕВОЙ ПРИНЦИП</div>
-      <ul>
-        <li>Приоритет защиты – у старожила.</li>
-        <li>Приоритет справедливости – у того, чей отказ обоснован.</li>
-        <li>Недопустимо принуждение к сорольству без веских оснований.</li>
-      </ul>
-
-      <div class="important-box">
-        <p>РЕШЕНИЕ СПОРНЫХ ВОПРОСОВ – ЗА АДМИНИСТРАЦИЕЙ</p>
-        <p>ОКОНЧАТЕЛЬНОЕ РЕШЕНИЕ – ЗА ВЛАДЕЛЬЦЕМ</p>
-      </div>
-
-      <div class="part-title">ВЕТКИ</div>
-      <p>Ветка — отдельная сюжетная линия, в рамках которой взаимодействуют персонажи.</p>
-
-      <div class="rule-title">МАКСИМАЛЬНОЕ КОЛИЧЕСТВО</div>
-      <p>Одновременно доступно ДВЕ активные ветки на одного участника.</p>
-      <ul>
-        <li>Одна ветка = взаимодействие в рамках одного диалога.</li>
-        <li>Стандартный состав – до 3 участников.</li>
-      </ul>
-
-      <div class="rule-title">НОРМА ПОСТОВ</div>
-      <ul>
-        <li>2 ветки – 2 поста в неделю (по одному в каждой).</li>
-      </ul>
-      <p>При двух ветках – пост в КАЖДОЙ из них, либо один развернутый, охватывающий обе.</p>
-
-      <div class="rule-title">ЦЕЛЬ ВЕТОК</div>
-      <ul>
-        <li>Возможность ролить с разными участниками без смешивания сюжетных линий.</li>
-        <li>Сохранение приоритетных связок – если вашу основную роль ждет сорол, вы можете параллельно общаться с другим участником.</li>
-      </ul>
-
-      <div class="rule-title">ПРИОРИТЕТ ОСНОВНОЙ ВЕТКИ</div>
-      <p>Если роль имеет закрепленную сорольную связку:</p>
-      <ul>
-        <li>ветка с этим соролом – ОСНОВНАЯ;</li>
-        <li>вторая – ДОПОЛНИТЕЛЬНАЯ;</li>
-        <li>основная ветка имеет приоритет по времени и качеству.</li>
-      </ul>
-
-      <div class="rule-title">ОТКРЫТИЕ И ЗАКРЫТИЕ</div>
-      <ul>
-        <li>Ветка открывается по согласию участников.</li>
-        <li>Закрывается: по завершении линии, по согласию, по решению администрации.</li>
-        <li>После закрытия норма пересчитывается.</li>
-      </ul>
-
-      <div class="rule-title">ЗАВИСШИЕ ВЕТКИ</div>
-      <p>Если нет активности более 5 дней:</p>
-      <ul>
-        <li>ветка признается "зависшей";</li>
-        <li>автоматически закрывается;</li>
-        <li>участники возвращаются к одной ветке.</li>
-      </ul>
-
-      <p>Три и более веток – нарушение, сокращение до двух.</p>
-      <p>Исключения – только с разрешения владельца.</p>
-
-      <div class="important-box">
-        <p>КАЖДАЯ ВЕТКА УЧИТЫВАЕТСЯ ПРИ ПРОВЕРКЕ НОРМ</p>
-        <p>НАРУШЕНИЕ ВЛЕЧЕТ ВАРН ИЛИ БАН</p>
-      </div>
-    </section>
-
-    <!-- ===== АНКЕТА ПЕРСОНАЖА ===== -->
-    <section id="anketa">
-      <h1>АНКЕТА ПЕРСОНАЖА</h1>
-      <p style="text-align:center;"><em>написание анкеты — 3 дня</em></p>
-
-      <h2>Обязательные блоки</h2>
-      <div class="field">
-        <span class="field-label">ИМЯ И ФАМИЛИЯ</span>
-        <p class="field-desc">(Впишите имя и фамилию персонажа, а также прозвище, если имеется)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">РАСА</span>
-        <p class="field-desc">(Выбрать из списка: Высший вампир / Классический / Чистокровный / Дампир / Глубинная русалка / Береговая русалка / Полукровка / Ледяная русалка / Болотная русалка / Обычный человек / Охотник на нечесть / Священник / Учёный)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ВОЗРАСТ</span>
-        <p class="field-desc">(Реальный возраст в годах или веках)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">СЮЖЕТНАЯ РОЛЬ</span>
-        <p class="field-desc">(Позиция в истории: кто он, какую функцию выполняет в сюжете)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ВНЕШНОСТЬ</span>
-        <p class="field-desc">(Возраст внешний, рост, телосложение, цвет волос и глаз, черты лица, шрамы, татуировки, родинки. Стиль одежды. Походка, голос, жесты)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ХАРАКТЕР</span>
-        <p class="field-desc">(Ключевые черты личности, поведение в стрессовых ситуациях, отношение к людям, привычки, моральные принципы)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">БИОГРАФИЯ</span>
-        <p class="field-desc">(Место рождения, семья, ключевые события, травмы, важные встречи. Мотивация: чего хочет достичь, чего боится. Текущий статус)</p>
-      </div>
-
-      <h2>Дополнительные пункты</h2>
-      <div class="field">
-        <span class="field-label">СПОСОБНОСТИ</span>
-        <p class="field-desc">(Боевые навыки, бытовые умения, интеллектуальные способности, магические дары)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">СЛАБЫЕ СТОРОНЫ</span>
-        <p class="field-desc">(Чего не умеет, что вызывает страх или боль. Что выводит из равновесия)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ИНВЕНТАРЬ</span>
-        <p class="field-desc">(Что всегда носит с собой: оружие, амуниция, личные вещи, предметы по профессии)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ЛЮБИМОЕ И НЕНАВИСТНОЕ</span>
-        <p class="field-desc">(Любимая еда, напитки, музыка, литература, время суток. Что раздражает)</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ДОПОЛНИТЕЛЬНО</span>
-        <p class="field-desc">(Особенности речи, акцент, лексика, связи с другими персонажами, цитаты, заметки автора)</p>
-      </div>
-
-      <div class="important-box">
-        <p>ОБЯЗАТЕЛЬНЫЕ БЛОКИ — ЗАПОЛНИТЬ ВСЕ</p>
-        <p>ДОПОЛНИТЕЛЬНЫЕ — НА ВАШЕ УСМОТРЕНИЕ</p>
-      </div>
-    </section>
-
-    <!-- ===== РАСЫ МИРА ===== -->
-    <section id="rasy">
-      <h1>РАСЫ МИРА</h1>
-
-      <h2>ВАМПИРЫ</h2>
-      <p>Бессмертное и сверхразумное существо, наделенное колоссальной физической и магической силой. Полностью сохраняет человеческий облик, свободу воли и изощренный интеллект. Неуязвим к солнцу, чесноку, серебру и святой воде. Воспринимает смертных либо как инструмент, либо как изысканную добычу. Древний, хладнокровный манипулятор.</p>
-
-      <div class="field">
-        <span class="field-label">КЛАССИЧЕСКИЙ (ОБРАЩЕННЫЙ)</span>
-        <p>Человек, ставший вампиром после укуса. Обладает сверхчеловеческой скоростью, силой и регенерацией. Имеет уязвимости к солнечному свету, чесноку, серебру и святой воде. Низшая каста вампиров, часто служат высшим.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ЧИСТОКРОВНЫЙ</span>
-        <p>Вампир, рожденный в семье двух обращенных вампиров. Считается элитой. Обладает врожденными родовыми дарами, сильнее обращенных. Уязвимости зависят от сеттинга.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ДАМПИР (ПОЛУКРОВКА)</span>
-        <p>Рожден от союза вампира и человека. Наследует физическую мощь вампиров, но лишен главных слабостей. Солнце переносит легче, чем обращенные. Часто не обладает магическим потенциалом чистокровных. Маргиналы, отвергаемые обеими сторонами.</p>
-      </div>
-
-      <h2>РУСАЛКИ</h2>
-      <div class="field">
-        <span class="field-label">ГЛУБИННАЯ (ДРЕВНЯЯ)</span>
-        <p>Чистокровная русалка, обитающая в глубоких частях океана. Кожа бледная, полупрозрачная, со свечением. Глаза черные или светящиеся голубые. Волосы напоминают щупальца. Хвост мощный, переливчатый. Владеет магией воды и разума. Практически не выходит на сушу.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">БЕРЕГОВАЯ</span>
-        <p>Обитает недалеко от берега, часто контактирует с людьми. Кожа бледная с легким загаром. Глаза от зеленого до янтарного. Хвост яркий, разноцветный. Может трансформировать хвост в ноги на суше. Умеет петь с гипнотическим эффектом. Длительное пребывание на суше вызывает обезвоживание.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ПОЛУКРОВКА</span>
-        <p>Рождена от союза русалки и человека. Почти неотличима от людей, но имеет необычный цвет глаз и переливающиеся волосы. Хвост появляется только в воде. Может дышать под водой, но не так долго, как чистокровные. Обладает сверхъестественным обаянием.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ЛЕДЯНАЯ (СЕВЕРНАЯ)</span>
-        <p>Обитает в холодных водах Арктики и Антарктики. Кожа бледно-голубая или серебристая. Глаза ярко-синие или белые. Волосы белые или пепельные. Хвост покрыт льдистой чешуей. Управляет льдом и холодом. Не переносит тепло, уязвима к огню и горячей воде.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">БОЛОТНАЯ (ТИННАЯ)</span>
-        <p>Обитает в болотах, топях и мангровых лесах. Кожа тусклая, серая или зеленоватая. Глаза мутные, желтые. Волосы напоминают тину. Хвост грязно-зеленый с шипами. Ядовита, умеет сливаться с окружающей средой. Считается низшей кастой.</p>
-      </div>
-
-      <h2>ЛЮДИ</h2>
-      <div class="field">
-        <span class="field-label">ОБЫЧНЫЙ ЧЕЛОВЕК</span>
-        <p>Самый многочисленный класс. Живет своей повседневной жизнью, не подозревая о существовании сверхъестественного. Точка входа в историю. Мотивация: выживание, поиск ответов, случайное вовлечение. Сильная сторона — непредсказуемость.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">ОХОТНИК НА НЕЧЕСТЬ</span>
-        <p>Профессиональный или добровольный истребитель сверхъестественных угроз. Не обладает магией, но компенсирует знаниями, подготовкой и решимостью. Мотивация: месть, долг, фанатичная вера или работа за деньги. Сильная сторона — знание уязвимостей врагов.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">СВЯЩЕННИК</span>
-        <p>Служитель церкви или любой религии, обладающей силой веры. Моральный компас, союзник или враг. Может быть фанатиком или сомневающимся служителем. Сильная сторона — вера как оружие. Молитвы, святая вода, освященное серебро имеют реальную силу против низших вампиров.</p>
-      </div>
-      <div class="field">
-        <span class="field-label">УЧЁНЫЙ</span>
-        <p>Представитель науки, столкнувшийся с тем, что не вписывается в картину мира. Не уничтожает, а изучает. Мотивация: любопытство, жажда знаний, поиск лекарства или объяснения. Сильная сторона — интеллект, аналитика, доступ к технологиям.</p>
-      </div>
-
-      <div class="important-box">
-        <p>ВСЕ РАСЫ ДОСТУПНЫ ДЛЯ ВЫБОРА</p>
-      </div>
-    </section>
-
+    <h1>Luogo di Morte</h1>
+    <p style="font-style: italic; margin-bottom: 1rem;">Добро пожаловать в мир средневековых тайн</p>
+    <div class="links">
+      <a href="rules.html">Правила флуда</a>
+      <a href="anketa.html">Анкета персонажа</a>
+      <a href="rasy.html">Расы мира</a>
+    </div>
   </div>
-
 </body>
-  </html>
+</html>
