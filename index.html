@@ -23,6 +23,7 @@
       --shadow-deep: rgba(0, 0, 0, 0.8);
       --shadow-soft: rgba(0, 0, 0, 0.5);
       --sparkle-color: #ffd78c;
+      --candle-glow-color: rgba(255, 180, 90, 0.3);
     }
 
     * {
@@ -50,6 +51,56 @@
       overflow-x: hidden;
     }
 
+    /* ========== РЕАЛИСТИЧНЫЙ СВЕТ ОТ СВЕЧЕЙ ========== */
+    .candle-glow {
+      position: fixed;
+      z-index: 99;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(30px);
+      mix-blend-mode: screen; /* чтобы свет осветлял, а не затемнял */
+    }
+    .candle-glow.left {
+      left: -60px;
+      top: 12%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle,
+        rgba(255, 190, 120, 0.35) 0%,
+        rgba(255, 150, 60, 0.15) 40%,
+        transparent 70%);
+      animation: realisticFlickerLeft 5s ease-in-out infinite alternate;
+    }
+    .candle-glow.right {
+      right: -60px;
+      top: 10%;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle,
+        rgba(255, 190, 120, 0.3) 0%,
+        rgba(255, 150, 60, 0.12) 40%,
+        transparent 70%);
+      animation: realisticFlickerRight 4.5s ease-in-out infinite alternate;
+    }
+
+    /* Анимации мерцания */
+    @keyframes realisticFlickerLeft {
+      0%   { transform: scale(1);    opacity: 0.65; }
+      20%  { transform: scale(1.05); opacity: 0.75; }
+      40%  { transform: scale(0.95); opacity: 0.6;  }
+      60%  { transform: scale(1.1);  opacity: 0.8;  }
+      80%  { transform: scale(1.02); opacity: 0.7;  }
+      100% { transform: scale(1.07); opacity: 0.75; }
+    }
+    @keyframes realisticFlickerRight {
+      0%   { transform: scale(1.05); opacity: 0.7;  }
+      30%  { transform: scale(0.97); opacity: 0.65; }
+      50%  { transform: scale(1.08); opacity: 0.78; }
+      70%  { transform: scale(0.99); opacity: 0.68; }
+      90%  { transform: scale(1.04); opacity: 0.72; }
+      100% { transform: scale(1);    opacity: 0.7;  }
+    }
+
     /* ========== ЛИСТ ПЕРГАМЕНТА ========== */
     .manuscript {
       position: relative;
@@ -68,6 +119,8 @@
         inset 0 0 0 1px rgba(255, 250, 240, 0.5);
       transform: rotate(-0.5deg);
       transition: transform 0.8s ease, box-shadow 0.8s ease;
+      /* Лёгкое покачивание */
+      animation: parchmentSway 7s ease-in-out infinite alternate;
     }
     .manuscript:hover {
       transform: rotate(0deg) translateY(-4px);
@@ -76,6 +129,12 @@
         0 0 0 16px rgba(140, 120, 90, 0.15),
         inset 0 0 120px rgba(120, 100, 70, 0.45),
         inset 0 0 0 1px rgba(255, 250, 240, 0.6);
+      animation-play-state: paused; /* чтобы не конфликтовало с hover */
+    }
+
+    @keyframes parchmentSway {
+      0% { transform: rotate(-0.8deg); }
+      100% { transform: rotate(0.2deg); }
     }
 
     /* Детальная текстура пергамента */
@@ -373,6 +432,7 @@
         padding: 2.5rem 1.5rem;
         margin-top: 20px;
         transform: none;
+        animation: none; /* убираем покачивание на мобильных для стабильности */
       }
       h1 {
         font-size: 2.2rem;
@@ -380,11 +440,26 @@
       .chapter-title {
         font-size: 1.8rem;
       }
+      .candle-glow.left {
+        left: -20px;
+        width: 200px;
+        height: 200px;
+      }
+      .candle-glow.right {
+        right: -20px;
+        width: 180px;
+        height: 180px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Свет от свечей -->
+  <div class="candle-glow left"></div>
+  <div class="candle-glow right"></div>
+
+  <!-- Основной лист -->
   <div class="manuscript">
     <div class="ornament"></div>
     <div class="corner tl"></div>
@@ -618,6 +693,7 @@
         <p>ОКОНЧАТЕЛЬНОЕ РЕШЕНИЕ – ЗА ВЛАДЕЛЬЦЕМ</p>
       </div>
 
+      <!-- Второй "ОБЩИЕ ПОЛОЖЕНИЯ" заменён на "ВЕТКИ" -->
       <div class="part-title">ВЕТКИ</div>
 
       <p>Ветка — отдельная сюжетная линия, в рамках которой взаимодействуют персонажи.</p>
@@ -689,47 +765,35 @@
   <script>
     // ===== АНИМАЦИЯ ЗОЛОТЫХ ИСКР ПОВЕРХ ТЕКСТА =====
     (function() {
-      const sparklesContainer = document.body;
-      const maxSparkles = 20; // максимальное одновременное количество
+      const maxSparkles = 20; // лимит одновременных искр
 
       function createSparkle() {
-        // Проверяем, не превышен ли лимит
-        const existing = document.querySelectorAll('.sparkle');
-        if (existing.length >= maxSparkles) return;
+        if (document.querySelectorAll('.sparkle').length >= maxSparkles) return;
 
         const sparkle = document.createElement('div');
         sparkle.classList.add('sparkle');
 
-        // Случайный размер (3-8px)
         const size = Math.random() * 5 + 3;
         sparkle.style.width = size + 'px';
         sparkle.style.height = size + 'px';
 
-        // Позиция: случайно в пределах видимой области, но не на самом верху
         const x = Math.random() * window.innerWidth;
-        const y = window.innerHeight - Math.random() * 100; // начинаем снизу
+        const y = window.innerHeight - Math.random() * 100;
         sparkle.style.left = x + 'px';
         sparkle.style.top = y + 'px';
 
-        // Случайная длительность анимации
         const duration = Math.random() * 3 + 3; // 3-6 секунд
         sparkle.style.animationDuration = duration + 's';
 
         document.body.appendChild(sparkle);
-
-        // Удаляем после завершения анимации
-        setTimeout(() => {
-          sparkle.remove();
-        }, duration * 1000 + 100);
+        setTimeout(() => sparkle.remove(), duration * 1000 + 100);
       }
 
-      // Запускаем создание с интервалом
       setInterval(createSparkle, 800);
-      // Немедленно создаём несколько
       for (let i = 0; i < 8; i++) {
         setTimeout(createSparkle, i * 300);
       }
     })();
   </script>
 </body>
-                                                                                </html>
+  </html>
